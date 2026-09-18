@@ -1,0 +1,2355 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>拍卖后台管理系统</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            width: 100%;
+            min-height: 100%;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+            background: #f3f1ec;
+            color: #222;
+        }
+
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+        }
+
+        .sidebar {
+            width: 267px;
+            min-width: 267px;
+            min-height: 100vh;
+            background: linear-gradient(180deg, #101010 0%, #181818 50%, #090909 100%);
+            color: #fff;
+            box-shadow: 4px 0 18px rgba(0, 0, 0, .20);
+            position: relative;
+            z-index: 10;
+        }
+
+        .logo-box {
+            height: 78px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid rgba(212, 175, 55, .30);
+            background: linear-gradient(135deg, #111111, #242424, #101010);
+        }
+
+        .logo-title {
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 4px;
+            background: linear-gradient(90deg, #f6e6a8, #d4af37, #fff0a8, #b88718);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .menu {
+            list-style: none;
+            padding-top: 12px;
+        }
+
+        .menu-item {
+            height: 54px;
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            cursor: pointer;
+            color: #c7c7c7;
+            border-left: 3px solid transparent;
+            transition: all .25s ease;
+        }
+
+        .menu-item:hover {
+            color: #f1d477;
+            background: linear-gradient(90deg, rgba(212, 175, 55, .15), rgba(212, 175, 55, .02));
+        }
+
+        .menu-item.active {
+            color: #fff;
+            border-left: 3px solid #d4af37;
+            background: linear-gradient(90deg, rgba(212, 175, 55, .25), rgba(212, 175, 55, .04));
+            box-shadow: inset 0 0 20px rgba(212, 175, 55, .05);
+        }
+
+        .menu-icon {
+            width: 34px;
+            min-width: 34px;
+            font-size: 18px;
+            color: #d4af37;
+            text-align: left;
+        }
+
+        .menu-text {
+            font-size: 16px;
+        }
+
+        .main-area {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .topbar {
+            height: 82px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 25px 0 30px;
+            color: #fff;
+            background: linear-gradient(120deg, #080808, #1c1c1c 45%, #0b0b0b);
+            border-bottom: 1px solid rgba(212, 175, 55, .45);
+            box-shadow: 0 3px 15px rgba(0, 0, 0, .20);
+        }
+
+        .top-title {
+            font-size: 17px;
+            letter-spacing: 1px;
+            color: #f1d477;
+            white-space: nowrap;
+        }
+
+        .top-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 7px;
+        }
+
+        .login-user {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 14px;
+            color: #d8d8d8;
+        }
+
+        .login-name {
+            color: #f1d477;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 3px 8px;
+            border-radius: 4px;
+            transition: .2s;
+        }
+
+        .login-name:hover {
+            color: #ffe9a0;
+            background: rgba(212, 175, 55, .15);
+        }
+
+        .top-bottom {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .member-search {
+            display: flex;
+            align-items: center;
+            height: 34px;
+        }
+
+        .member-search input {
+            width: 245px;
+            height: 34px;
+            padding: 0 12px;
+            outline: none;
+            border: 1px solid #80651d;
+            border-right: none;
+            border-radius: 5px 0 0 5px;
+            background: #181818;
+            color: #fff;
+            font-size: 13px;
+            transition: .2s;
+        }
+
+        .member-search input::placeholder {
+            color: #888;
+        }
+
+        .member-search input:focus {
+            border-color: #d4af37;
+            box-shadow: 0 0 8px rgba(212, 175, 55, .20);
+        }
+
+        .search-btn {
+            height: 34px;
+            padding: 0 16px;
+            border: 1px solid #b58a20;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+            color: #fff;
+            font-size: 13px;
+            background: linear-gradient(135deg, #997117, #d4af37, #a07817);
+            transition: .2s;
+        }
+
+        .search-btn:hover {
+            background: linear-gradient(135deg, #c69a2b, #efd36d, #b4861d);
+        }
+
+        .time {
+            font-size: 14px;
+            color: #d8d8d8;
+            white-space: nowrap;
+        }
+
+        .content {
+            padding: 25px;
+        }
+
+        .welcome-box {
+            background: #fff;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 25px;
+            border: 1px solid #e6dfcf;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, .05);
+        }
+
+        .page-title {
+            font-size: 30px;
+            font-weight: bold;
+            color: #161616;
+            margin-bottom: 15px;
+        }
+
+        .page-description {
+            color: #777;
+            font-size: 16px;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 30px;
+            border: 1px solid #e6dfcf;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, .05);
+            margin-bottom: 25px;
+        }
+
+        .card-title {
+            font-size: 21px;
+            font-weight: bold;
+            margin-bottom: 25px;
+            color: #191919;
+            border-left: 4px solid #d4af37;
+            padding-left: 12px;
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        .form-label-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .form-label {
+            font-size: 15px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .copy-template-btn {
+            font-size: 12px;
+            color: #987317;
+            background: #f4ecd6;
+            border: 1px solid #d4af37;
+            padding: 2px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .copy-template-btn:hover {
+            background: #d4af37;
+            color: #fff;
+        }
+
+        .form-control {
+            width: 100%;
+            height: 45px;
+            padding: 0 13px;
+            border: 1px solid #d8d2c4;
+            border-radius: 5px;
+            outline: none;
+            font-size: 15px;
+            background: #fff;
+            transition: .2s;
+        }
+
+        .form-control:focus {
+            border-color: #c39a27;
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, .12);
+        }
+
+        textarea.form-control {
+            height: 100px;
+            padding-top: 12px;
+            resize: vertical;
+        }
+
+        .btn {
+            height: 43px;
+            padding: 0 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 15px;
+            color: #fff;
+            background: linear-gradient(135deg, #b88918, #d4af37, #9a7314);
+            box-shadow: 0 4px 10px rgba(164, 124, 26, .25);
+            transition: .2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 15px rgba(164, 124, 26, .35);
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .table th {
+            background: #181818;
+            color: #e7cb72;
+            padding: 14px;
+            text-align: left;
+        }
+
+        .table td {
+            padding: 14px;
+            border-bottom: 1px solid #eee;
+            color: #555;
+        }
+
+        .table tr:hover {
+            background: #faf7ef;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            background: #f4ecd6;
+            color: #987317;
+        }
+
+        .search-result {
+            display: none;
+            margin-top: 25px;
+            border: 1px solid #e5dfd0;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .search-result-title {
+            padding: 15px 18px;
+            background: #191919;
+            color: #e7cb72;
+            font-weight: bold;
+        }
+
+        .search-result-body {
+            padding: 20px;
+        }
+
+        .result-row {
+            display: flex;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .result-row:last-child {
+            border-bottom: none;
+        }
+
+        .result-label {
+            width: 120px;
+            color: #888;
+        }
+
+        .result-value {
+            color: #333;
+            font-weight: bold;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, .65);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-box {
+            width: 420px;
+            max-width: 90%;
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, .35);
+        }
+
+        .modal-header {
+            padding: 18px 22px;
+            background: linear-gradient(120deg, #111, #292929, #101010);
+            color: #e7cb72;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .modal-body {
+            padding: 25px;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            padding: 15px 25px 25px;
+        }
+
+        .cancel-btn {
+            height: 40px;
+            padding: 0 20px;
+            border: 1px solid #ddd;
+            background: #fff;
+            color: #555;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+
+        /* =====================================================
+           卖家质保金合同
+        ===================================================== */
+
+        .contract-tools {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+        }
+
+        .contract-tools .btn {
+            min-width: 120px;
+        }
+
+        .contract-paper {
+            width: 210mm;
+            min-height: 297mm;
+            margin: 0 auto;
+            padding: 22mm 20mm 35mm;
+            background: #fff;
+            color: #222;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, .15);
+            border: 1px solid #ddd;
+            position: relative;
+            overflow: visible;
+        }
+
+        .contract-title {
+            text-align: center;
+            font-size: 26px;
+            font-weight: bold;
+            letter-spacing: 5px;
+            margin-bottom: 28px;
+            color: #111;
+        }
+
+        .contract-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            font-size: 15px;
+        }
+
+        .contract-line {
+            border-bottom: 1px solid #555;
+            min-width: 160px;
+            display: inline-block;
+            padding: 0 5px 3px;
+            outline: none;
+        }
+
+        .contract-body {
+            font-size: 15px;
+            line-height: 2;
+        }
+
+        .contract-section {
+            margin-bottom: 16px;
+        }
+
+        .contract-section-title {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .editable {
+            outline: none;
+            border-radius: 3px;
+            transition: .2s;
+        }
+
+        .editable:hover {
+            background: rgba(212, 175, 55, .08);
+        }
+
+        .editable:focus {
+            background: #fffdf4;
+            box-shadow: 0 0 0 1px rgba(212, 175, 55, .5);
+        }
+
+        .contract-sign {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 55px;
+            font-size: 15px;
+        }
+
+        .sign-box {
+            width: 44%;
+            min-height: 100px;
+        }
+
+        .sign-title {
+            font-weight: bold;
+            margin-bottom: 22px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* =====================================================
+           印章上传 / 整个合同自由拖动 / 缩放
+        ===================================================== */
+
+        .seal-upload-area {
+            width: 100%;
+            height: 145px;
+            position: relative;
+            border-bottom: 1px solid #777;
+            margin-bottom: 10px;
+            overflow: visible;
+            background: rgba(250, 250, 250, .25);
+            z-index: 20;
+            touch-action: none;
+        }
+
+        .seal-upload-btn {
+            position: absolute;
+            left: 50%;
+            top: 42%;
+            transform: translate(-50%, -50%);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 16px;
+            border: 1px solid #c39a27;
+            border-radius: 5px;
+            color: #987317;
+            background: #fffdf4;
+            cursor: pointer;
+            font-size: 13px;
+            z-index: 5;
+            user-select: none;
+            white-space: nowrap;
+        }
+
+        .seal-upload-btn:hover {
+            background: #f8efd1;
+            color: #76570b;
+        }
+
+        .seal-tip {
+            position: absolute;
+            left: 0;
+            bottom: 4px;
+            width: 100%;
+            text-align: center;
+            font-size: 11px;
+            color: #aaa;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .seal-wrapper {
+            position: absolute !important;
+            left: 0;
+            top: 0;
+            width: 90px;
+            height: 90px;
+            transform: none !important;
+            z-index: 99999 !important;
+            cursor: move;
+            user-select: none;
+            touch-action: none;
+            display: none;
+        }
+
+        .seal-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+            pointer-events: none;
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+
+        .seal-resize-handle {
+            position: absolute;
+            right: -6px;
+            bottom: -6px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #d4af37;
+            border: 2px solid #fff;
+            box-shadow: 0 1px 5px rgba(0, 0, 0, .35);
+            cursor: nwse-resize;
+            z-index: 100001 !important;
+            touch-action: none;
+        }
+
+        .seal-delete-btn {
+            position: absolute;
+            right: -13px;
+            top: -13px;
+            width: 23px;
+            height: 23px;
+            padding: 0;
+            border: 1px solid #fff;
+            border-radius: 50%;
+            background: #222;
+            color: #fff;
+            font-size: 15px;
+            line-height: 19px;
+            cursor: pointer;
+            z-index: 100002 !important;
+            box-shadow: 0 1px 5px rgba(0, 0, 0, .35);
+            touch-action: manipulation;
+        }
+
+        .seal-delete-btn:hover {
+            background: #a00000;
+        }
+
+        .seal-upload-area.has-seal .seal-upload-btn,
+        .seal-upload-area.has-seal .seal-tip {
+            display: none;
+        }
+
+        .contract-capture-mode .seal-upload-btn,
+        .contract-capture-mode .seal-tip,
+        .contract-capture-mode .seal-resize-handle,
+        .contract-capture-mode .seal-delete-btn {
+            display: none !important;
+        }
+
+        .contract-capture-mode .seal-wrapper {
+            z-index: 99999 !important;
+        }
+
+        @media(max-width: 1100px) {
+            .contract-paper {
+                transform-origin: top center;
+                width: 210mm;
+            }
+            .contract-wrapper {
+                overflow-x: auto;
+                padding-bottom: 20px;
+            }
+        }
+
+        @media print {
+            body * {
+                visibility: hidden !important;
+            }
+            #contractPaper,
+            #contractPaper * {
+                visibility: visible !important;
+            }
+            #contractPaper {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 210mm;
+                min-height: 297mm;
+                margin: 0;
+                box-shadow: none;
+                border: none;
+            }
+            .seal-upload-btn,
+            .seal-tip,
+            .seal-resize-handle,
+            .seal-delete-btn {
+                display: none !important;
+            }
+        }
+
+
+        /* =====================================================
+           鉴定证书可编辑模板
+        ===================================================== */
+        .certificate-card{padding:30px}
+        .certificate-tools{display:flex;justify-content:flex-end;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+        .certificate-editor-tip{margin:0 0 16px;padding:12px 14px;border:1px solid #d4af37;border-radius:8px;background:rgba(212,175,55,.08);color:#5f5130;line-height:1.7;font-size:13px}
+        .certificate-editor-layout{display:grid;grid-template-columns:300px minmax(0,1fr);gap:18px;align-items:start}
+        .certificate-form{background:#111;border:1px solid #3a3a3a;border-radius:10px;padding:16px;color:#eee;position:sticky;top:15px;max-height:90vh;overflow-y:auto}
+        .certificate-form-title{font-size:16px;font-weight:700;color:#d4af37;margin-bottom:12px}
+        .certificate-form label{display:block;font-size:12px;color:#bbb;margin:10px 0 5px}
+        .certificate-form input[type=text],.certificate-form input[type=date]{width:100%;box-sizing:border-box;padding:9px 10px;border:1px solid #555;border-radius:6px;background:#202020;color:#fff;outline:none}
+        .certificate-form input:focus{border-color:#d4af37;box-shadow:0 0 0 2px rgba(212,175,55,.12)}
+        .certificate-form .form-actions{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+        .certificate-form .form-actions button{flex:1;min-width:100px}
+        .certificate-images-panel{margin-top:15px;padding-top:13px;border-top:1px solid #3a3a3a}
+        .certificate-images-panel-title{color:#d4af37;font-weight:700;font-size:13px;margin-bottom:7px;display:flex;justify-content:space-between;align-items:center}
+        .add-image-btn{background:#d4af37;color:#111;border:none;padding:2px 8px;border-radius:4px;cursor:pointer;font-size:12px;font-weight:bold}
+        .add-image-btn:hover{background:#f1d477}
+        .certificate-upload-row{display:flex;flex-direction:column;gap:7px;max-height:180px;overflow-y:auto}
+        .certificate-upload-row .upload-item{display:flex;align-items:center;justify-content:space-between;background:#181818;border:1px dashed #666;border-radius:6px;padding:6px 10px;font-size:12px;color:#ddd}
+        .certificate-upload-row .upload-item label{margin:0;cursor:pointer;color:#d4af37;flex:1}
+        .certificate-upload-row .upload-item input[type=file]{display:none}
+        .certificate-upload-row .upload-item .del-img-btn{background:none;border:none;color:#ff5555;cursor:pointer;font-size:14px;margin-left:8px}
+
+        .certificate-viewer{background:#f5f3ee;border:1px solid #e0d8c7;border-radius:10px;padding:22px;overflow:auto}
+        .certificate-paper{width:min(100%,760px);margin:0 auto;position:relative;background:#fff;box-shadow:0 5px 25px rgba(0,0,0,.15);overflow:hidden;aspect-ratio:1125/1595}
+        .certificate-paper>.certificate-background{display:block;position:absolute;inset:0;width:100%;height:100%;object-fit:fill;user-select:none;-webkit-user-drag:none}
+        
+        /* 独立文本框（鉴定编号与最后日期：现已支持自由拖动和调整大小） */
+        .cert-edit-control{position:absolute;box-sizing:border-box;z-index:4;margin:0;padding:4px 6px;border:1.5px solid #000000;border-radius:3px;background:rgba(255,255,255,0.25);color:#111;text-align:center;font-family:"Microsoft YaHei","PingFang SC",Arial,sans-serif;font-weight:600;outline:none;line-height:1.2;font-size:clamp(10px,1.55vw,17px);cursor:move;resize:both;overflow:auto;touch-action:none;}
+        .cert-edit-control:hover{background:rgba(255,255,255,0.5);border-color:#000;}
+        .cert-edit-control:focus{border:1.5px solid #d4af37;background:rgba(255,255,255,0.85);box-shadow:0 0 0 2px rgba(212,175,55,.18)}
+        
+        .cert-no{left:40.2%;top:25.7%;width:37.2%;height:3.4%}
+        .cert-final-date{left:65%;top:82%;width:19%;height:3.5%}
+
+        /* 6个区域合并为一个表格框架：具备黑色边框、支持自由移动和调整大小 */
+        .cert-merged-table-box {
+            position: absolute;
+            left: 27.5%;
+            top: 32%;
+            width: 57%;
+            height: 23%;
+            z-index: 5;
+            box-sizing: border-box;
+            border: 2px solid #000000;
+            background: rgba(255, 255, 255, 0.35);
+            resize: both;
+            overflow: auto;
+            cursor: move;
+            display: flex;
+            flex-direction: column;
+            touch-action: none;
+            border-radius: 2px;
+        }
+        .cert-merged-table-box:hover {
+            background: rgba(255, 255, 255, 0.6);
+            border-color: #000;
+        }
+        .cert-merged-table-box:focus-within {
+            border-color: #d4af37;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 0 0 2px rgba(212, 175, 55, .2);
+        }
+        .cert-inner-table {
+            width: 100%;
+            height: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+        .cert-inner-table td {
+            border: 1px solid #000000;
+            padding: 2px;
+            text-align: center;
+            vertical-align: middle;
+            font-size: clamp(9px, 1.3vw, 14px);
+            font-weight: 600;
+            color: #111;
+        }
+        .cert-cell-input {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: transparent;
+            text-align: center;
+            font-weight: 600;
+            color: #111;
+            outline: none;
+            font-family: inherit;
+            font-size: inherit;
+        }
+        .cert-cell-input:focus {
+            background: rgba(212, 175, 55, 0.15);
+        }
+
+        /* 图片区域网格容器：支持自由移动和编辑大小 */
+        .cert-images-grid-box {
+            position: absolute;
+            left: 27.5%;
+            top: 56.5%;
+            width: 57%;
+            height: 22%;
+            z-index: 5;
+            box-sizing: border-box;
+            border: 2px solid #000000;
+            background: rgba(255, 255, 255, 0.25);
+            resize: both;
+            overflow: auto;
+            cursor: move;
+            display: flex;
+            flex-direction: column;
+            padding: 4px;
+            border-radius: 2px;
+            touch-action: none;
+        }
+        .cert-images-grid-box:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+        .cert-images-grid {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-auto-rows: 1fr;
+            gap: 4px;
+            overflow-y: auto;
+            width: 100%;
+            height: 100%;
+        }
+        .cert-grid-slot {
+            position: relative;
+            background: rgba(255,255,255,0.7);
+            border: 1px solid #777;
+            border-radius: 3px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 40px;
+        }
+        .cert-grid-slot img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+        .cert-grid-slot .slot-clear {
+            position: absolute;
+            right: 2px;
+            top: 2px;
+            z-index: 7;
+            border: 0;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            line-height: 15px;
+            padding: 0;
+            background: rgba(0,0,0,0.65);
+            color: #fff;
+            cursor: pointer;
+            font-size: 10px;
+        }
+
+        /* 下方突破选择上传功能区域 */
+        .cert-breakthrough-upload-box {
+            position: absolute;
+            left: 27.5%;
+            top: 79.5%;
+            width: 57%;
+            z-index: 6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 6px;
+            background: rgba(17, 17, 17, 0.85);
+            border: 1.5px dashed #d4af37;
+            border-radius: 4px;
+        }
+        .cert-breakthrough-btn {
+            background: linear-gradient(135deg, #b88918, #d4af37, #9a7314);
+            color: #fff;
+            border: none;
+            padding: 4px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            white-space: nowrap;
+        }
+        .cert-breakthrough-btn:hover {
+            background: linear-gradient(135deg, #c69a2b, #efd36d, #b4861d);
+        }
+        .cert-breakthrough-tip {
+            font-size: 11px;
+            color: #f1d477;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .certificate-note{margin-top:12px;text-align:center;color:#888;font-size:13px;line-height:1.6}
+        @media(max-width:900px){.certificate-editor-layout{grid-template-columns:1fr}.certificate-form{position:static}}
+        @media print{body *{visibility:hidden!important}#certificate,#certificate *{visibility:visible!important}#certificate .certificate-form,#certificate .certificate-tools,#certificate .certificate-editor-tip,#certificate .certificate-note,#certificate .cert-breakthrough-upload-box{display:none!important}#certificate{position:absolute;left:0;top:0;width:100%}.certificate-editor-layout{display:block!important}.certificate-viewer{padding:0;border:0;background:#fff}.certificate-paper{width:210mm;max-width:none;box-shadow:none;margin:0 auto}.cert-edit-control,.cert-merged-table-box,.cert-images-grid-box{border:0!important;background:transparent!important}}
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="admin-container">
+
+    <!-- 左侧导航 -->
+    <aside class="sidebar">
+        <div class="logo-box">
+            <div class="logo-title">
+                拍卖后台查询系统
+            </div>
+        </div>
+
+        <ul class="menu">
+            <li class="menu-item active" onclick="showPage('home', this)">
+                <span class="menu-icon">⌂</span>
+                <span class="menu-text">首页</span>
+            </li>
+            <li class="menu-item" onclick="showPage('users', this)">
+                <span class="menu-icon">♟</span>
+                <span class="menu-text">用户管理</span>
+            </li>
+            <li class="menu-item" onclick="showPage('deposit', this)">
+                <span class="menu-icon">□</span>
+                <span class="menu-text">店铺质保金</span>
+            </li>
+            <li class="menu-item" onclick="showPage('withdraw', this)">
+                <span class="menu-icon">□</span>
+                <span class="menu-text">店铺解冻金</span>
+            </li>
+            <li class="menu-item" onclick="showPage('certificate', this)" id="certificateMenuItem">
+                <span class="menu-icon">▣</span>
+                <span class="menu-text">鉴定证书</span>
+            </li>
+            <li class="menu-item" onclick="showPage('credit', this)">
+                <span class="menu-icon">□</span>
+                <span class="menu-text">店铺信誉分和星级</span>
+            </li>
+            <li class="menu-item" onclick="showPage('bank', this)">
+                <span class="menu-icon">□</span>
+                <span class="menu-text">店铺银行卡</span>
+            </li>
+            <li class="menu-item" onclick="showPage('finance', this)">
+                <span class="menu-icon">□</span>
+                <span class="menu-text">会员账户状态查询</span>
+            </li>
+            <li class="menu-item" onclick="showPage('tax', this)">
+                <span class="menu-icon">□</span>
+                <span class="menu-text">店铺税务问题</span>
+            </li>
+            <li class="menu-item" onclick="showPage('channel', this)">
+                <span class="menu-icon">□</span>
+                <span class="menu-text">店铺大额通道</span>
+            </li>
+            <li class="menu-item" onclick="showPage('contract', this)">
+                <span class="menu-icon">□</span>
+                <span class="menu-text">卖家质保金合同</span>
+            </li>
+        </ul>
+    </aside>
+
+    <!-- 右侧主体 -->
+    <main class="main-area">
+
+        <!-- 顶部栏 -->
+        <header class="topbar">
+            <div class="top-title">
+                邦翰斯（香港）有限公司 拍卖管理系统
+            </div>
+
+            <div class="top-right">
+                <div class="login-user">
+                    <span>登录人：</span>
+                    <span class="login-name" id="loginName" onclick="changeLoginName()">王桂英</span>
+                </div>
+
+                <div class="top-bottom">
+                    <div class="member-search">
+                        <input type="text" id="memberSearch" placeholder="请输入会员姓名/手机号/会员编号" onkeydown="memberSearchEnter(event)">
+                        <button class="search-btn" onclick="searchMember()">搜索</button>
+                    </div>
+                    <div class="time" id="currentTime"></div>
+                </div>
+            </div>
+        </header>
+
+        <!-- 内容区域 -->
+        <section class="content">
+
+            <!-- 首页 -->
+            <div id="home" class="page">
+                <div class="welcome-box">
+                    <div class="page-title">首页</div>
+                    <div class="page-description">欢迎进入后台系统</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">系统概况</div>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>项目</th>
+                            <th>数据</th>
+                            <th>状态</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>用户数量</td>
+                            <td>2,999,999+</td>
+                            <td><span class="status">正常</span></td>
+                        </tr>
+                        <tr>
+                            <td>正在拍卖订单数量</td>
+                            <td>9999+</td>
+                            <td><span class="status">正常</span></td>
+                        </tr>
+                        <tr>
+                            <td>待处理业务</td>
+                            <td>999+</td>
+                            <td><span class="status">待处理</span></td>
+                        </tr>
+                        <tr>
+                            <td>拍卖交易完成数量</td>
+                            <td>10000+</td>
+                            <td><span class="status">正常</span></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 用户管理 -->
+            <div id="users" class="page" style="display:none;">
+                <div class="welcome-box">
+                    <div class="page-title">用户管理</div>
+                    <div class="page-description">用户信息管理</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">用户信息</div>
+                    <div class="form-group">
+                        <label class="form-label">用户名称</label>
+                        <input class="form-control" placeholder="请输入用户名">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">手机号码</label>
+                        <input class="form-control" placeholder="请输入手机号码">
+                    </div>
+                    <button class="btn" onclick="submitForm()">提交</button>
+                </div>
+            </div>
+
+            <!-- 保证金 -->
+            <div id="deposit" class="page" style="display:none;">
+                <div class="welcome-box">
+                    <div class="page-title">质保金缴纳查询</div>
+                    <div class="page-description">质保金业务管理</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">交易质保金</div>
+                    <div class="form-group">
+                        <label class="form-label">用户名称</label>
+                        <input class="form-control" placeholder="请输入用户名">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">质保金缴纳情况</label>
+                        <input class="form-control" placeholder="请输入查询情况">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">查询业务类型</label>
+                        <select class="form-control">
+                            <option>质保金缴纳情况</option>
+                            <option>解冻金缴纳情况</option>
+                            <option>银行卡信息</option>
+                            <option>其他业务</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-label-row">
+                            <label class="form-label">查询结果详细情况以及解决办法</label>
+                            <button type="button" class="copy-template-btn" onclick="copyTemplateText('depositText')">📄 一键复制稳定模版</button>
+                        </div>
+                        <textarea id="depositText" class="form-control" placeholder="请输入查询情况说明">经系统核实，您的店铺质保金缴纳状态正常，账户资金安全，无异常冻结或扣款记录。</textarea>
+                    </div>
+                    <button class="btn" onclick="submitForm()">提交信息</button>
+                </div>
+            </div>
+
+            <!-- 解冻金 -->
+            <div id="withdraw" class="page" style="display:none;">
+                <div class="welcome-box">
+                    <div class="page-title">店铺冻结情况查询</div>
+                    <div class="page-description">查询业务管理</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">详细情况</div>
+                    <div class="form-group">
+                        <label class="form-label">用户名称</label>
+                        <input class="form-control" placeholder="请输入用户名" oninput="checkShowBtn()">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">详细查询情况</label>
+                        <input class="form-control" placeholder="请输入查询情况" oninput="checkShowBtn()">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">账户被冻结总金额</label>
+                        <input type="number" class="form-control" placeholder="请输入金额" oninput="checkShowBtn()">
+                    </div>
+                    <div class="form-group">
+                        <div class="form-label-row">
+                            <label class="form-label">详细情况说明以及解决办法</label>
+                            <button type="button" class="copy-template-btn" onclick="copyTemplateText('withdrawText')">📄 一键复制稳定模版</button>
+                        </div>
+                        <textarea id="withdrawText" class="form-control" placeholder="请输入查询情况说明" oninput="checkShowBtn()">您的账户由于未完成相关合规校验或保证金阶段性锁定导致临时冻结。请按系统提示补缴相应差额或联系在线客服申请解冻。</textarea>
+                    </div>
+                    <button id="withdrawSubmitBtn" class="btn" onclick="submitForm()" style="display:none;">提交</button>
+                </div>
+            </div>
+
+            <!-- 信誉分 -->
+            <div id="credit" class="page" style="display:none;">
+                <div class="welcome-box">
+                    <div class="page-title">店铺信誉分和星级</div>
+                    <div class="page-description">用户信誉等级管理</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">用户信誉信息</div>
+                    <div class="form-group">
+                        <label class="form-label">用户名称</label>
+                        <input class="form-control" placeholder="请输入用户名">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">信誉分</label>
+                        <input type="number" class="form-control" value="100">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">星级</label>
+                        <select class="form-control">
+                            <option>★★★★★</option>
+                            <option>★★★★</option>
+                            <option>★★★</option>
+                            <option>★★</option>
+                            <option>★</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-label-row">
+                            <label class="form-label">查询情况说明</label>
+                            <button type="button" class="copy-template-btn" onclick="copyTemplateText('creditText')">📄 一键复制稳定模版</button>
+                        </div>
+                        <textarea id="creditText" class="form-control" placeholder="请输入查询情况说明" oninput="checkShowBtn()">当前店铺信誉分良好，星级评定稳定，各项拍卖业务合规进行中。</textarea>
+                    </div>
+                    <button class="btn" onclick="submitForm()">保存</button>
+                </div>
+            </div>
+
+            <!-- 银行卡 -->
+            <div id="bank" class="page" style="display:none;">
+                <div class="welcome-box">
+                    <div class="page-title">用户银行卡登记信息</div>
+                    <div class="page-description">银行卡信息管理</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">银行卡信息</div>
+                    <div class="form-group">
+                        <label class="form-label">银行名称</label>
+                        <input class="form-control" placeholder="请输入银行名称">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">持卡人姓名</label>
+                        <input class="form-control" placeholder="请输入姓名">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">银行卡号</label>
+                        <input class="form-control" placeholder="请输入银行卡号">
+                    </div>
+                    <div class="form-group">
+                        <div class="form-label-row">
+                            <label class="form-label">银行卡查询情况说明</label>
+                            <button type="button" class="copy-template-btn" onclick="copyTemplateText('bankText')">📄 一键复制稳定模版</button>
+                        </div>
+                        <textarea id="bankText" class="form-control" placeholder="请输入查询情况说明" oninput="checkShowBtn()">经系统校验，当前绑定的银行卡信息核对无误，支持正常的资金转账及结算业务。</textarea>
+                    </div>
+                    <button class="btn" onclick="submitForm()">保存</button>
+                </div>
+            </div>
+
+            <!-- 账户状态 -->
+            <div id="finance" class="page" style="display:none;">
+                <div class="welcome-box">
+                    <div class="page-title">账户状态查询</div>
+                    <div class="page-description">账户状态查询</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">账户状态查询结果</div>
+                    <div class="form-group">
+                        <label class="form-label">用户名称</label>
+                        <input class="form-control" placeholder="请输入用户名">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">查询结果</label>
+                        <input class="form-control" placeholder="请输入内容">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">解决方案</label>
+                        <input type="text" class="form-control" placeholder="请输入解决方案">
+                    </div>
+                    <button class="btn" onclick="submitForm()">提交</button>
+                </div>
+            </div>
+
+            <!-- 税务 -->
+            <div id="tax" class="page" style="display:none;">
+                <div class="welcome-box">
+                    <div class="page-title">税务问题</div>
+                    <div class="page-description">税务信息管理</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">税务信息</div>
+                    <div class="form-group">
+                        <label class="form-label">用户名称</label>
+                        <input class="form-control" placeholder="请输入用户名">
+                    </div>
+                    <div class="form-group">
+                        <div class="form-label-row">
+                            <label class="form-label">税务查询结果</label>
+                            <button type="button" class="copy-template-btn" onclick="copyTemplateText('taxText')">📄 一键复制稳定模版</button>
+                        </div>
+                        <textarea id="taxText" class="form-control" placeholder="请输入税务相关说明">当前账户税务申报合规，未发现违规漏税或未结清税务账单。</textarea>
+                    </div>
+                    <button class="btn" onclick="submitForm()">保存</button>
+                </div>
+            </div>
+
+            <!-- 大额通道 -->
+            <div id="channel" class="page" style="display:none;">
+                <div class="welcome-box">
+                    <div class="page-title">大额通道</div>
+                    <div class="page-description">大额业务通道管理</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">通道信息查询</div>
+                    <div class="form-group">
+                        <label class="form-label">用户名称</label>
+                        <input class="form-control" placeholder="请输入通道名称">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">查询状态</label>
+                        <select class="form-control">
+                            <option>未开通</option>
+                            <option>已开通</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-label-row">
+                            <label class="form-label">查询结果</label>
+                            <button type="button" class="copy-template-btn" onclick="copyTemplateText('channelText')">📄 一键复制稳定模版</button>
+                        </div>
+                        <textarea id="channelText" class="form-control" placeholder="请输入查询情况说明" oninput="checkShowBtn()">大额交易通道需完成高级实名认证及风险评估后方可正常申请开通。</textarea>
+                    </div>
+                    <button class="btn" onclick="submitForm()">保存</button>
+                </div>
+            </div>
+
+
+            <!-- =====================================================
+                 鉴定证书
+            ===================================================== -->
+            <div id="certificate" class="page" style="display:none;">
+                <div class="welcome-box"><div class="page-title">鉴定证书模板</div><div class="page-description">可编辑字段、背景图片上传、表格及多图管理、自由拖动、截图及打印</div></div>
+                <div class="card certificate-card">
+                    <div class="certificate-editor-tip"><strong>模板说明：</strong>鉴定编号、最后日期、中间表格及图片区域均支持鼠标随意拖动和自由调整大小。</div>
+                    <div class="certificate-tools">
+                        <button class="btn" onclick="saveCertificateTemplate()">保存模板</button>
+                        <button class="btn" onclick="screenshotCertificate()">一键截图</button>
+                        <button class="btn" onclick="printCertificate()">打印模板</button>
+                    </div>
+                    <div class="certificate-editor-layout">
+                        <div class="certificate-form">
+                            <div class="certificate-form-title">证书信息编辑</div>
+                            
+                            <label>上传背景图片</label>
+                            <div style="margin-bottom:10px;">
+                                <label style="display:block;padding:8px;border:1px dashed #d4af37;border-radius:6px;text-align:center;cursor:pointer;color:#d4af37;background:#181818;font-size:12px;">
+                                    📷 选择背景图片<input type="file" accept="image/*" onchange="handleBackgroundUpload(event)" style="display:none;">
+                                </label>
+                            </div>
+
+                            <label>鉴定编号</label><input type="text" id="certNoInput" value="60340202603290703" oninput="syncCertificateField('certNoInput','certNoOverlay')">
+                            <label>样品名称</label><input type="text" id="certNameInput" value="第四套人民币第十元纸币" oninput="syncTableField(0,1,'certNameInput')">
+                            <label>测试日期</label><input type="text" id="certTestDateInput" value="2026/03/29" oninput="syncTableField(0,3,'certTestDateInput')">
+                            <label>样品尺寸</label><input type="text" id="certSizeInput" value="未测量" oninput="syncTableField(1,1,'certSizeInput')">
+                            <label>样品质量</label><input type="text" id="certQualityInput" value="未测量" oninput="syncTableField(1,3,'certQualityInput')">
+                            <label>样品质地</label><input type="text" id="certTextureInput" value="棉" oninput="syncTableField(2,1,'certTextureInput')">
+                            <label>样品编号</label><input type="text" id="certSampleNoInput" value="BHS1116" oninput="syncTableField(2,3,'certSampleNoInput')">
+                            <label>最后日期</label><input type="text" id="certFinalDateInput" value="二零二六年三月" oninput="syncCertificateField('certFinalDateInput','certFinalDateOverlay')">
+                            
+                            <div class="certificate-images-panel">
+                                <div class="certificate-images-panel-title">
+                                    <span>表格图片管理（多个图片）</span>
+                                    <button class="add-image-btn" type="button" onclick="addCertificateImageSlot()">+ 添加图片</button>
+                                </div>
+                                <div class="certificate-upload-row" id="certImageUploadList">
+                                    <!-- 动态生成的上传项列表 -->
+                                </div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button class="btn" onclick="saveCertificateTemplate()">保存</button>
+                                <button class="cancel-btn" onclick="resetCertificateTemplate()">恢复默认</button>
+                            </div>
+                        </div>
+
+                        <div class="certificate-viewer">
+                            <div class="certificate-paper" id="certificatePaper">
+                                <img class="certificate-background" id="certificateImage" alt="证书模板背景" draggable="false">
+                                
+                                <!-- 独立的鉴定编号与最后日期文字输入框（已支持自由拖动和调整大小） -->
+                                <input class="cert-edit-control cert-no" id="certNoOverlay" value="60340202603290703" aria-label="鉴定编号">
+                                <input class="cert-edit-control cert-final-date" id="certFinalDateOverlay" value="二零二六年三月" aria-label="最后日期">
+                                
+                                <!-- 6个区域合并为一个表格，支持自由调整大小和自由拖动 -->
+                                <div class="cert-merged-table-box" id="certMergedTableBox">
+                                    <table class="cert-inner-table">
+                                        <tr>
+                                            <td style="width:22%;">样品名稱<br>Name</td>
+                                            <td style="width:28%;"><input class="cert-cell-input" id="table_0_1" value="第四套人民币第十元纸币" oninput="syncInputFromTable(0,1,'certNameInput')"></td>
+                                            <td style="width:22%;">測試日期<br>Test date</td>
+                                            <td style="width:28%;"><input class="cert-cell-input" id="table_0_3" value="2026/03/29" oninput="syncInputFromTable(0,3,'certTestDateInput')"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>样品尺寸<br>Size</td>
+                                            <td><input class="cert-cell-input" id="table_1_1" value="未测量" oninput="syncInputFromTable(1,1,'certSizeInput')"></td>
+                                            <td>样品质量<br>Quality</td>
+                                            <td><input class="cert-cell-input" id="table_1_3" value="未测量" oninput="syncInputFromTable(1,3,'certQualityInput')"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>样品质地<br>Texture</td>
+                                            <td><input class="cert-cell-input" id="table_2_1" value="棉" oninput="syncInputFromTable(2,1,'certTextureInput')"></td>
+                                            <td>样品编号<br>Sample number</td>
+                                            <td><input class="cert-cell-input" id="table_2_3" value="BHS1116" oninput="syncInputFromTable(2,3,'certSampleNoInput')"></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                
+                                <!-- 图片区域网格容器：支持自由移动和编辑大小 -->
+                                <div class="cert-images-grid-box" id="certImagesGridBox">
+                                    <div class="cert-images-grid" id="certImagesGrid">
+                                        <!-- 动态渲染图片格子 -->
+                                    </div>
+                                </div>
+
+                                <!-- 下方突破选择上传功能区域 -->
+                                <div class="cert-breakthrough-upload-box">
+                                    <label class="cert-breakthrough-btn" title="突破限制直接选择文件上传到证书">
+                                        ⚡ 突破选择上传
+                                        <input type="file" accept="image/*" onchange="handleBreakthroughUpload(event)" style="display:none;">
+                                    </label>
+                                    <span class="cert-breakthrough-tip" id="breakthroughTip">点击按钮直接选择图片并填入证书</span>
+                                </div>
+                            </div>
+                            <div class="certificate-note">提示：各区域均带边框，支持随意拖动和自由调整大小。</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- =====================================================
+                 卖方质保金合同
+            ===================================================== -->
+            <div id="contract" class="page" style="display:none;">
+                <div class="welcome-box">
+                    <div class="page-title">卖家质保金合同</div>
+                    <div class="page-description">A4合同编辑、截图及打印</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">合同编辑</div>
+
+                    <div class="contract-tools">
+                        <button class="btn" onclick="saveContract()">保存内容</button>
+                        <button class="btn" onclick="screenshotContract()">一键截图</button>
+                        <button class="btn" onclick="printContract()">打印合同</button>
+                        <button class="cancel-btn" onclick="clearContract()">恢复默认</button>
+                    </div>
+
+                    <div class="contract-wrapper">
+                        <div class="contract-paper" id="contractPaper">
+
+                            <div class="contract-title editable" contenteditable="true">
+                                卖方质保金合同
+                            </div>
+
+                            <div class="contract-info">
+                                <div>
+                                    合同编号：
+                                    <span class="contract-line editable" contenteditable="true">
+                                        HT20260001
+                                    </span>
+                                </div>
+                                <div>
+                                    签订日期：
+                                    <span class="contract-line editable" contenteditable="true">
+                                        2026年9:13日
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="contract-body">
+                                <div class="contract-section">
+                                    <div class="contract-section-title">乙方（卖方）</div>
+                                    <div class="editable" contenteditable="true">
+                                        姓  名：____________________________
+                                        <br>
+                                        身份证：____________________________
+                                        <br>
+                                        电  话：____________________________
+                                    </div>
+                                </div>
+
+                                <div class="contract-section">
+                                    <div class="contract-section-title">鉴于：</div>
+                                    <div class="editable" contenteditable="true">
+                                        1. 双方约定的标的成交总价为人民币/币种：
+                                        ____________________（以下简称“成交价”）。
+                                        <br>
+                                        2. 截至合同签署日，甲方已按主合同向乙方支付成交价50%,
+                                        即 ____________________（币种：________）。
+                                        <br>
+                                        3. 为保障乙方按主合同履行交付、交易等义务，
+                                        同时保障甲方按时完成剩余款项支付，
+                                        双方就乙方缴纳质保金达成协议。
+                                    </div>
+                                </div>
+
+                                <div class="contract-section">
+                                    <div class="contract-section-title">第一条 质保金金额及缴纳</div>
+                                    <div class="editable" contenteditable="true">
+                                        1. 乙方缴纳成交价1%的质保金，
+                                        金额为 ____________________（币种：________）。
+                                        <br>
+                                        2. 合同生效后__1__个工作日内，
+                                        乙方应将质保金支付至指定账户。
+                                        <br>
+                                        3. 该质保金性质为履约保障金，
+                                        用于保障乙方依照主合同履行相关义务。
+                                        <br>
+                                        4. 甲方收到质保金后，应向乙方出具书面收款确认。
+                                    </div>
+                                </div>
+
+                                <div class="contract-section">
+                                    <div class="contract-section-title">第二条 买方尾款支付义务</div>
+                                    <div class="editable" contenteditable="true">
+                                        1. 甲方已支付成交价50%,即
+                                        ____________________,
+                                        作为首付款/定金,具体性质及法律效力以主合同约定为准。
+                                        <br>
+                                        2. 除双方另有书面约定外,
+                                        甲方不得无正当理由拒绝、拖延或阻碍剩余50%尾款支付及交易完成。
+                                    </div>
+                                </div>
+
+                                <div class="contract-section">
+                                    <div class="contract-section-title">第三条 卖方履约及质保金返还</div>
+                                    <div class="editable" contenteditable="true">
+                                        1. 乙方收到质保金后,应按照主合同约定履行卖方义务,包括:
+                                        <br>
+                                        （1）提供真实、合法、有效的交易文件；
+                                        <br>
+                                        （2）完成标的交付、过户或转让；
+                                        <br>
+                                        （3）保证标的不存在重大权利瑕疵；
+                                        <br>
+                                        （4）按照约定时间配合完成交易；
+                                        <br>
+                                        （5）履行主合同约定的其他义务。
+                                        <br>
+                                        2. 若乙方完成上述义务且甲方按照主合同支付剩余50%尾款,
+                                        乙方缴纳的1%质保金应在__1日__内无息返还。
+                                    </div>
+                                </div>
+
+                                <div class="contract-section">
+                                    <div class="contract-section-title">第四条 买方未按时支付尾款的违约责任</div>
+                                    <div class="editable" contenteditable="true">
+                                        1. 在乙方已经履行主合同义务且不存在乙方违约或其他乙方原因的情况下,
+                                        甲方未按照约定期限支付剩余50%尾款的,构成违约。
+                                        <br>
+                                        2. 甲方逾期超过__1__个工作日的,
+                                        乙方有权要求甲方继续履行付款义务,并要求甲方承担相应违约责任。
+                                        <br>
+                                        3. 特别约定：若甲方未按期完成剩余50%尾款支付,
+                                        且该未付款情形并非因乙方原因造成,
+                                        则甲方已支付50%款项中可按照本合同约定提取10%
+                                        作为乙方违约补偿。
+                                        <br>
+                                        4. 违约补偿金计算方式为:
+                                        <br>
+                                        成交价 × 50% × 10% = 成交价5%。
+                                        <br>
+                                        例如：成交价为1,000,000元,
+                                        甲方已经支付500,000元,
+                                        则违约补偿金为50,000元。
+                                        <br>
+                                        5. 上述补偿金可按照双方书面约定,
+                                        从甲方已经支付的50%款项中直接划转或扣除后支付给乙方,
+                                        剩余款项按照双方关于解除、退款或继续履行的约定处理。
+                                    </div>
+                                </div>
+
+                                <div class="contract-section">
+                                    <div class="contract-section-title">第五条 卖方质保金处理</div>
+                                    <div class="editable" contenteditable="true">
+                                        1. 甲方按照约定支付剩余50%尾款,
+                                        且乙方不存在违约行为的,
+                                        乙方缴纳的1%质保金按照第三条约定返还。
+                                        <br>
+                                        2. 若乙方因自身原因未履行主合同义务,
+                                        导致交易无法完成,乙方应按照主合同承担相应违约责任；
+                                        甲方有权依照主合同及适用法律要求乙方承担相应责任。
+                                        <br>
+                                        3. 除双方另有明确书面约定外,
+                                        在乙方不存在违约行为的情况下,
+                                        甲方不得擅自没收、扣留或处分乙方质保金。
+                                    </div>
+                                </div>
+
+                                <div class="contract-section">
+                                    <div class="contract-section-title">第六条 违约责任适用</div>
+                                    <div class="editable" contenteditable="true">
+                                        1. 只有在乙方已经履约且甲方未按期支付剩余50%尾款的情况下,
+                                        方可适用第四条约定的10%违约补偿。
+                                        <br>
+                                        2. 若甲方未支付尾款的原因包括乙方违约、
+                                        交易文件存在重大问题、标的存在重大未披露权利瑕疵,
+                                        或因乙方原因导致交易无法完成,
+                                        则甲方不承担第四条约定的违约补偿责任。
+                                        <br>
+                                        3. 因不可抗力或双方无法控制的客观原因导致交易延迟的,
+                                        双方应协商顺延履行期限,原则上不直接认定任何一方违约。
+                                    </div>
+                                </div>
+
+                                <div class="contract-section">
+                                    <div class="contract-section-title">第七条 交易终止及款项处理</div>
+                                    <div class="editable" contenteditable="true">
+                                        若甲方发生尾款支付违约,乙方可根据实际情况选择：
+                                        <br>
+                                        1. 要求甲方继续支付剩余50%尾款并完成交易；
+                                        <br>
+                                        或
+                                        <br>
+                                        2. 在符合合同解除条件的情况下解除交易,
+                                        并按照第四条约定从甲方已经支付的50%款项中提取10%
+                                        作为乙方违约补偿。
+                                        <br>
+                                        上述选择由乙方以书面方式通知甲方。
+                                    </div>
+                                </div>
+
+                                <div class="contract-section">
+                                    <div class="contract-section-title">第八条 争议解决</div>
+                                    <div class="editable" contenteditable="true">
+                                        1. 本合同的订立、效力、解释、履行及争议解决,
+                                        适用双方约定的相关法律。
+                                        <br>
+                                        2. 因本合同产生的任何争议,
+                                        双方应首先通过友好协商解决。
+                                        <br>
+                                        3. 协商不成的,
+                                        双方可按照主合同约定提交约定的仲裁委员会仲裁,
+                                        或依法向有管辖权的人民法院提起诉讼。
+                                    </div>
+                                </div>
+
+                                <div class="contract-section">
+                                    <div class="contract-section-title">质保金收款确认</div>
+                                    <div class="editable" contenteditable="true">
+                                        乙方于____年____月____日向甲方支付本合同约定质保金：
+                                        <br>
+                                        成交价1%,即 ____________________（币种：________）。
+                                        <br>
+                                        甲方确认已实际收到上述质保金。
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- ==================== 签章区域 ==================== -->
+                            <div class="contract-sign">
+
+                                <!-- 甲方 -->
+                                <div class="sign-box">
+                                    <div class="sign-title">甲方签字/盖章</div>
+                                    <div class="seal-upload-area" id="sealArea" style="border-bottom: none;">
+                                        <div class="seal-wrapper" id="sealWrapper" style="display:none;">
+                                            <img id="sealImage" class="seal-image" src="" alt="甲方印章" draggable="false">
+                                            <div class="seal-resize-handle" id="sealResizeHandle"></div>
+                                            <button type="button" class="seal-delete-btn" onclick="removeSeal(event)">×</button>
+                                        </div>
+                                        <label class="seal-upload-btn" id="sealUploadBtn">
+                                            📷 上传印章
+                                            <input type="file" id="sealInput" accept="image/png,image/jpeg,image/jpg,image/webp" hidden>
+                                        </label>
+                                        <div class="seal-tip">上传后可自由拖动印章，并拖动右下角调整大小</div>
+                                    </div>
+
+                                    <div style="width: 290px; margin-top: 8px;">
+                                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                            <span style="width: 4em; text-align-last: justify; display: inline-block;">签字：</span>
+                                            <span contenteditable="true" style="border-bottom:1px solid #000; outline:none; width: 225px; display:inline-block; min-height:22px; padding: 0 4px; word-break: break-all;">邦翰斯（香港）有限公司</span>
+                                        </div>
+                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                            <span style="width: 4em; text-align-last: justify; display: inline-block;">日期：</span>
+                                            <div style="width: 225px; text-align: left; white-space: nowrap;">
+                                                <span contenteditable="true" style="width:42px; display:inline-block; text-align:center; border-bottom:1px solid #000; outline:none; min-height:20px;">2026</span>年
+                                                <span contenteditable="true" style="width:30px; display:inline-block; text-align:center; border-bottom:1px solid #000; outline:none; min-height:20px;">9</span>月
+                                                <span contenteditable="true" style="width:30px; display:inline-block; text-align:center; border-bottom:1px solid #000; outline:none; min-height:20px;">13</span>日
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 乙方 -->
+                                <div class="sign-box">
+                                    <div class="sign-title">乙方签字/盖章</div>
+                                    <div class="seal-upload-area" id="sealAreaB" style="border-bottom: none;">
+                                        <div class="seal-wrapper" id="sealWrapperB" style="display:none;">
+                                            <img id="sealImageB" class="seal-image" src="" alt="乙方印章" draggable="false">
+                                            <div class="seal-resize-handle" id="sealResizeHandleB"></div>
+                                            <button type="button" class="seal-delete-btn" onclick="removeSealB(event)">×</button>
+                                        </div>
+                                        <label class="seal-upload-btn" id="sealUploadBtnB">
+                                            📷 上传印章
+                                            <input type="file" id="sealInputB" accept="image/png,image/jpeg,image/jpg,image/webp" hidden>
+                                        </label>
+                                        <div class="seal-tip">上传后可自由拖动印章，并拖动右下角调整大小</div>
+                                    </div>
+
+                                    <div style="width: 290px; margin-top: 8px;">
+                                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                            <span style="width: 4em; text-align-last: justify; display: inline-block;">签字：</span>
+                                            <span contenteditable="true" style="border-bottom:1px solid #000; outline:none; width: 225px; display:inline-block; min-height:22px; padding: 0 4px; word-break: break-all;">张三</span>
+                                        </div>
+                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                            <span style="width: 4em; text-align-last: justify; display: inline-block;">日期：</span>
+                                            <div style="width: 225px; text-align: left; white-space: nowrap;">
+                                                <span contenteditable="true" style="width:42px; display:inline-block; text-align:center; border-bottom:1px solid #000; outline:none; min-height:20px;">2026</span>年
+                                                <span contenteditable="true" style="width:30px; display:inline-block; text-align:center; border-bottom:1px solid #000; outline:none; min-height:20px;">9</span>月
+                                                <span contenteditable="true" style="width:30px; display:inline-block; text-align:center; border-bottom:1px solid #000; outline:none; min-height:20px;">13</span>日
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 搜索结果 -->
+            <div id="memberSearchResult" class="search-result">
+                <div class="search-result-title">会员搜索结果</div>
+                <div class="search-result-body">
+                    <div class="result-row">
+                        <div class="result-label">会员姓名</div>
+                        <div class="result-value" id="resultName">-</div>
+                    </div>
+                    <div class="result-row">
+                        <div class="result-label">会员编号</div>
+                        <div class="result-value" id="resultId">-</div>
+                    </div>
+                    <div class="result-row">
+                        <div class="result-label">手机号码</div>
+                        <div class="result-value" id="resultPhone">-</div>
+                    </div>
+                    <div class="result-row">
+                        <div class="result-label">当前状态</div>
+                        <div class="result-value"><span class="status">正常</span></div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </main>
+</div>
+
+<!-- 修改登录人弹窗 -->
+<div class="modal" id="nameModal">
+    <div class="modal-box">
+        <div class="modal-header">修改登录人姓名</div>
+        <div class="modal-body">
+            <label class="form-label">登录人姓名</label>
+            <input type="text" class="form-control" id="newLoginName" placeholder="请输入登录人姓名">
+        </div>
+        <div class="modal-footer">
+            <button class="cancel-btn" onclick="closeNameModal()">取消</button>
+            <button class="btn" onclick="saveLoginName()">确定</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 一键复制稳定模版文本到剪贴板
+    function copyTemplateText(elementId) {
+        const textarea = document.getElementById(elementId);
+        if (!textarea) return;
+        textarea.select();
+        textarea.setSelectionRange(0, 99999);
+        navigator.clipboard.writeText(textarea.value).then(() => {
+            alert("已成功复制稳定格式内容！可直接粘贴到编辑器中使用。");
+        }).catch(err => {
+            try {
+                document.execCommand('copy');
+                alert("已成功复制稳定格式内容！可直接粘贴到编辑器中使用。");
+            } catch (e) {
+                alert("复制失败，请手动选择并复制。");
+            }
+        });
+    }
+
+    function showPage(pageId, element) {
+        const pages = document.querySelectorAll(".page");
+        pages.forEach(page => page.style.display = "none");
+        const target = document.getElementById(pageId);
+        if (target) target.style.display = "block";
+        const menus = document.querySelectorAll(".menu-item");
+        menus.forEach(menu => menu.classList.remove("active"));
+        element.classList.add("active");
+    }
+
+    function updateTime() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, "0");
+        const day = String(now.getDate()).padStart(2, "0");
+        const weekList = ["日", "一", "二", "三", "四", "五", "六"];
+        const week = weekList[now.getDay()];
+        const hour = String(now.getHours()).padStart(2, "0");
+        const minute = String(now.getMinutes()).padStart(2, "0");
+        const second = String(now.getSeconds()).padStart(2, "0");
+        document.getElementById("currentTime").innerText = `${year}/${month}/${day} 周${week} - ${hour}:${minute}:${second}`;
+    }
+    updateTime();
+    setInterval(updateTime, 1000);
+
+    function changeLoginName() {
+        const currentName = document.getElementById("loginName").innerText;
+        document.getElementById("newLoginName").value = currentName;
+        document.getElementById("nameModal").style.display = "flex";
+        setTimeout(() => document.getElementById("newLoginName").focus(), 100);
+    }
+
+    function closeNameModal() {
+        document.getElementById("nameModal").style.display = "none";
+    }
+
+    function saveLoginName() {
+        const newName = document.getElementById("newLoginName").value.trim();
+        if (newName === "") {
+            alert("登录人姓名不能为空！");
+            return;
+        }
+        document.getElementById("loginName").innerText = newName;
+        localStorage.setItem("loginUserName", newName);
+        closeNameModal();
+    }
+
+    function loadLoginName() {
+        const savedName = localStorage.getItem("loginUserName");
+        if (savedName) document.getElementById("loginName").innerText = savedName;
+    }
+    loadLoginName();
+
+    function searchMember() {
+        const keyword = document.getElementById("memberSearch").value.trim();
+        if (keyword === "") {
+            alert("请输入会员姓名、手机号或会员编号！");
+            return;
+        }
+        let memberName = "张三";
+        let memberId = "HY20260001";
+        let memberPhone = "138****8888";
+        if (keyword !== "张三") {
+            memberName = keyword;
+            memberId = "HY" + new Date().getFullYear() + "0001";
+            memberPhone = "138****8888";
+        }
+        document.getElementById("resultName").innerText = memberName;
+        document.getElementById("resultId").innerText = memberId;
+        document.getElementById("resultPhone").innerText = memberPhone;
+        document.getElementById("memberSearchResult").style.display = "block";
+    }
+
+    function memberSearchEnter(event) {
+        if (event.key === "Enter") searchMember();
+    }
+
+    function submitForm() {
+        alert("信息提交成功！");
+    }
+
+    // ==========================================
+    // 鉴定证书动态逻辑
+    // ==========================================
+    let certImagesData = [];
+
+    function initCertificateImages(initialImages) {
+        if (initialImages && initialImages.length > 0) {
+            certImagesData = initialImages;
+        } else {
+            certImagesData = [
+                "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' style='background:%23eee;color:%23555;'><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-size='12'>图1</text></svg>",
+                "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' style='background:%23eee;color:%23555;'><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-size='12'>图2</text></svg>"
+            ];
+        }
+        renderCertificateImagesUI();
+    }
+
+    function renderCertificateImagesUI() {
+        const uploadList = document.getElementById("certImageUploadList");
+        const gridContainer = document.getElementById("certImagesGrid");
+        if (!uploadList || !gridContainer) return;
+
+        uploadList.innerHTML = "";
+        gridContainer.innerHTML = "";
+
+        certImagesData.forEach((imgSrc, index) => {
+            const uploadItem = document.createElement("div");
+            uploadItem.className = "upload-item";
+            uploadItem.innerHTML = `
+                <label>图片 ${index + 1} <input type="file" accept="image/*" onchange="handleCertImageChange(${index}, event)"></label>
+                <button class="del-img-btn" type="button" onclick="removeCertImage(${index})" title="删除">×</button>
+            `;
+            uploadList.appendChild(uploadItem);
+
+            const gridSlot = document.createElement("div");
+            gridSlot.className = "cert-grid-slot";
+            gridSlot.innerHTML = `
+                <img src="${imgSrc}" alt="证书图${index + 1}">
+                <button class="slot-clear" type="button" onclick="clearCertSlot(${index})" title="清除">×</button>
+            `;
+            gridContainer.appendChild(gridSlot);
+        });
+
+        const count = certImagesData.length;
+        if (count <= 2) {
+            gridContainer.style.gridTemplateColumns = "repeat(2, 1fr)";
+        } else if (count <= 4) {
+            gridContainer.style.gridTemplateColumns = "repeat(2, 1fr)";
+        } else {
+            gridContainer.style.gridTemplateColumns = "repeat(3, 1fr)";
+        }
+    }
+
+    function addCertificateImageSlot() {
+        certImagesData.push("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' style='background:%23eee;color:%23555;'><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-size='12'>新图</text></svg>");
+        renderCertificateImagesUI();
+    }
+
+    function removeCertImage(index) {
+        certImagesData.splice(index, 1);
+        renderCertificateImagesUI();
+    }
+
+    function clearCertSlot(index) {
+        certImagesData[index] = "";
+        renderCertificateImagesUI();
+    }
+
+    function handleCertImageChange(index, event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            certImagesData[index] = e.target.result;
+            renderCertificateImagesUI();
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function handleBreakthroughUpload(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            certImagesData.push(e.target.result);
+            renderCertificateImagesUI();
+            const tip = document.getElementById("breakthroughTip");
+            if (tip) tip.innerText = `已成功上传并添加: ${file.name}`;
+        };
+        reader.readAsDataURL(file);
+        event.target.value = "";
+    }
+
+    function handleBackgroundUpload(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const bgImg = document.getElementById("certificateImage");
+            if (bgImg) bgImg.src = e.target.result;
+            localStorage.setItem("customCertBackground", e.target.result);
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function syncCertificateField(inputId, overlayId) {
+        const val = document.getElementById(inputId).value;
+        const overlay = document.getElementById(overlayId);
+        if (overlay) overlay.value = val;
+    }
+
+    function syncTableField(row, col, inputId) {
+        const val = document.getElementById(inputId).value;
+        const cellInput = document.getElementById(`table_${row}_${col}`);
+        if (cellInput) cellInput.value = val;
+    }
+
+    function syncInputFromTable(row, col, inputId) {
+        const cellInput = document.getElementById(`table_${row}_${col}`);
+        const sideInput = document.getElementById(inputId);
+        if (cellInput && sideInput) {
+            sideInput.value = cellInput.value;
+        }
+    }
+
+    // 支持自由拖拽元素（鉴定编号、最后日期等独立文本框、表格框、图片框）
+    function initCertControlDrag() {
+        const controls = document.querySelectorAll(".cert-edit-control, .cert-merged-table-box, .cert-images-grid-box");
+        const paper = document.getElementById("certificatePaper");
+        if (!paper) return;
+
+        controls.forEach(el => {
+            let isDragging = false;
+            let startX, startY, startLeft, startTop;
+
+            el.addEventListener("pointerdown", function(e) {
+                const rect = el.getBoundingClientRect();
+                // 若点击右下角调整大小手柄（resize 区域），则不触发拖动
+                if (e.clientX > rect.right - 18 && e.clientY > rect.bottom - 18) return;
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'BUTTON' || e.target.tagName === 'LABEL') return;
+                
+                isDragging = true;
+                startX = e.clientX;
+                startY = e.clientY;
+                
+                const paperRect = paper.getBoundingClientRect();
+                startLeft = rect.left - paperRect.left;
+                startTop = rect.top - paperRect.top;
+                
+                el.setPointerCapture(e.pointerId);
+                e.preventDefault();
+            });
+
+            el.addEventListener("pointermove", function(e) {
+                if (!isDragging) return;
+                const dx = e.clientX - startX;
+                const dy = e.clientY - startY;
+                
+                const newLeft = startLeft + dx;
+                const newTop = startTop + dy;
+                
+                el.style.left = (newLeft / paper.clientWidth) * 100 + "%";
+                el.style.top = (newTop / paper.clientHeight) * 100 + "%";
+            });
+
+            function stopDrag(e) {
+                if (isDragging) {
+                    isDragging = false;
+                    try { el.releasePointerCapture(e.pointerId); } catch(err){}
+                }
+            }
+
+            el.addEventListener("pointerup", stopDrag);
+            el.addEventListener("pointercancel", stopDrag);
+        });
+    }
+
+    function saveCertificateTemplate() {
+        const controlPositions = {};
+        document.querySelectorAll(".cert-edit-control, .cert-merged-table-box, .cert-images-grid-box").forEach(el => {
+            controlPositions[el.id] = { 
+                left: el.style.left, 
+                top: el.style.top, 
+                width: el.style.width, 
+                height: el.style.height 
+            };
+        });
+
+        const data = {
+            no: document.getElementById("certNoInput").value,
+            name: document.getElementById("certNameInput").value,
+            testDate: document.getElementById("certTestDateInput").value,
+            size: document.getElementById("certSizeInput").value,
+            quality: document.getElementById("certQualityInput").value,
+            texture: document.getElementById("certTextureInput").value,
+            sampleNo: document.getElementById("certSampleNoInput").value,
+            finalDate: document.getElementById("certFinalDateInput").value,
+            images: certImagesData,
+            bg: document.getElementById("certificateImage").src,
+            positions: controlPositions
+        };
+        localStorage.setItem("savedCertificateData", JSON.stringify(data));
+        alert("鉴定证书模板保存成功！");
+    }
+
+    function loadCertificateTemplate() {
+        const saved = localStorage.getItem("savedCertificateData");
+        const customBg = localStorage.getItem("customCertBackground");
+        
+        if (customBg) {
+            document.getElementById("certificateImage").src = customBg;
+        } else {
+            document.getElementById("certificateImage").src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1125' height='1595' style='background:%23fff;'></svg>";
+        }
+
+        if (saved) {
+            try {
+                const data = JSON.parse(saved);
+                document.getElementById("certNoInput").value = data.no || "";
+                document.getElementById("certNoOverlay").value = data.no || "";
+                
+                document.getElementById("certNameInput").value = data.name || "";
+                document.getElementById("table_0_1").value = data.name || "";
+                
+                document.getElementById("certTestDateInput").value = data.testDate || "";
+                document.getElementById("table_0_3").value = data.testDate || "";
+                
+                document.getElementById("certSizeInput").value = data.size || "";
+                document.getElementById("table_1_1").value = data.size || "";
+                
+                document.getElementById("certQualityInput").value = data.quality || "";
+                document.getElementById("table_1_3").value = data.quality || "";
+                
+                document.getElementById("certTextureInput").value = data.texture || "";
+                document.getElementById("table_2_1").value = data.texture || "";
+                
+                document.getElementById("certSampleNoInput").value = data.sampleNo || "";
+                document.getElementById("table_2_3").value = data.sampleNo || "";
+                
+                document.getElementById("certFinalDateInput").value = data.finalDate || "";
+                document.getElementById("certFinalDateOverlay").value = data.finalDate || "";
+
+                if (data.bg) document.getElementById("certificateImage").src = data.bg;
+                if (data.positions) {
+                    for (let id in data.positions) {
+                        const el = document.getElementById(id);
+                        if (el) {
+                            if (data.positions[id].left) el.style.left = data.positions[id].left;
+                            if (data.positions[id].top) el.style.top = data.positions[id].top;
+                            if (data.positions[id].width) el.style.width = data.positions[id].width;
+                            if (data.positions[id].height) el.style.height = data.positions[id].height;
+                        }
+                    }
+                }
+                initCertificateImages(data.images);
+                initCertControlDrag();
+                return;
+            } catch (e) {}
+        }
+        initCertificateImages();
+        initCertControlDrag();
+    }
+
+    function resetCertificateTemplate() {
+        if (!confirm("确定要恢复默认设置吗？")) return;
+        localStorage.removeItem("savedCertificateData");
+        localStorage.removeItem("customCertBackground");
+        location.reload();
+    }
+
+    async function screenshotCertificate() {
+        const paper = document.getElementById("certificatePaper");
+        if (!paper) return;
+        try {
+            const canvas = await html2canvas(paper, {
+                scale: 2,
+                useCORS: true,
+                backgroundColor: "#ffffff",
+                logging: false
+            });
+            const link = document.createElement("a");
+            link.download = "鉴定证书.png";
+            link.href = canvas.toDataURL("image/png");
+            link.click();
+        } catch (error) {
+            alert("截图失败，请重试。");
+        }
+    }
+
+    function printCertificate() {
+        window.print();
+    }
+
+    // ==========================================
+    // 合同签名逻辑
+    // ==========================================
+    function saveContract() {
+        const paper = document.getElementById("contractPaper");
+        localStorage.setItem("sellerContractContentV3", paper.innerHTML);
+        saveSealData("A");
+        saveSealData("B");
+        alert("合同内容已保存！");
+    }
+
+    function loadContract() {
+        const saved = localStorage.getItem("sellerContractContentV3");
+        if (saved) document.getElementById("contractPaper").innerHTML = saved;
+    }
+
+    function readImageFile(file, type) {
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const dataUrl = e.target.result;
+            if (type === "A") {
+                showSeal("sealArea", "sealWrapper", "sealImage", dataUrl);
+                localStorage.setItem("sellerSealImageA", dataUrl);
+            } else {
+                showSeal("sealAreaB", "sealWrapperB", "sealImageB", dataUrl);
+                localStorage.setItem("sellerSealImageB", dataUrl);
+            }
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function uploadSeal(event) {
+        const input = event.target;
+        if (!input.files || input.files.length === 0) return;
+        readImageFile(input.files[0], "A");
+        input.value = "";
+    }
+
+    function uploadSealB(event) {
+        const input = event.target;
+        if (!input.files || input.files.length === 0) return;
+        readImageFile(input.files[0], "B");
+        input.value = "";
+    }
+
+    function attachSealToPaper(wrapper, area) {
+        const paper = document.getElementById("contractPaper");
+        if (!paper || !wrapper) return;
+        if (wrapper.parentElement === paper) {
+            wrapper.style.position = "absolute";
+            wrapper.style.transform = "none";
+            wrapper.style.zIndex = "99999";
+            return;
+        }
+        wrapper.style.display = "block";
+        const oldRect = wrapper.getBoundingClientRect();
+        const paperRect = paper.getBoundingClientRect();
+        paper.appendChild(wrapper);
+        wrapper.style.position = "absolute";
+        wrapper.style.transform = "none";
+        let left = oldRect.left - paperRect.left;
+        let top = oldRect.top - paperRect.top;
+        wrapper.style.left = Math.max(0, Math.min(left, paper.clientWidth - wrapper.offsetWidth)) + "px";
+        wrapper.style.top = Math.max(0, Math.min(top, paper.clientHeight - wrapper.offsetHeight)) + "px";
+        wrapper.style.zIndex = "99999";
+    }
+
+    function showSeal(areaId, wrapperId, imageId, dataUrl) {
+        const area = document.getElementById(areaId);
+        const wrapper = document.getElementById(wrapperId);
+        const image = document.getElementById(imageId);
+        const paper = document.getElementById("contractPaper");
+        if (!area || !wrapper || !image || !paper) return;
+        image.src = dataUrl;
+        wrapper.style.display = "block";
+        area.classList.add("has-seal");
+        if (!wrapper.dataset.initialized) {
+            wrapper.style.width = "90px";
+            wrapper.style.height = "90px";
+            wrapper.style.left = "20px";
+            wrapper.style.top = "20px";
+            wrapper.style.transform = "none";
+            wrapper.dataset.initialized = "1";
+        }
+        attachSealToPaper(wrapper, area);
+        initSealDragAndResize(paper, wrapper);
+        wrapper.style.zIndex = "99999";
+    }
+
+    function initSealDragAndResize(paper, wrapper) {
+        if (!paper || !wrapper || wrapper.dataset.eventsReady === "1") return;
+        wrapper.dataset.eventsReady = "1";
+        let mode = null, startX = 0, startY = 0, startLeft = 0, startTop = 0, startSize = 0, activePointerId = null;
+        const resizeHandle = wrapper.querySelector(".seal-resize-handle");
+        const deleteButton = wrapper.querySelector(".seal-delete-btn");
+
+        wrapper.addEventListener("pointerdown", function(event) {
+            if (resizeHandle && (event.target === resizeHandle || resizeHandle.contains(event.target))) return;
+            if (deleteButton && (event.target === deleteButton || deleteButton.contains(event.target))) return;
+            event.preventDefault();
+            event.stopPropagation();
+            mode = "drag";
+            activePointerId = event.pointerId;
+            startX = event.clientX;
+            startY = event.clientY;
+            startLeft = wrapper.offsetLeft;
+            startTop = wrapper.offsetTop;
+            wrapper.style.zIndex = "99999";
+            try { wrapper.setPointerCapture(event.pointerId); } catch (e) {}
+        });
+
+        wrapper.addEventListener("pointermove", function(event) {
+            if (mode !== "drag" || event.pointerId !== activePointerId) return;
+            event.preventDefault();
+            const dx = event.clientX - startX;
+            const dy = event.clientY - startY;
+            const maxLeft = Math.max(0, paper.clientWidth - wrapper.offsetWidth);
+            const maxTop = Math.max(0, paper.clientHeight - wrapper.offsetHeight);
+            wrapper.style.left = Math.max(0, Math.min(startLeft + dx, maxLeft)) + "px";
+            wrapper.style.top = Math.max(0, Math.min(startTop + dy, maxTop)) + "px";
+            wrapper.style.zIndex = "99999";
+        });
+
+        function stopDrag(event) {
+            if (mode !== "drag") return;
+            if (event && event.pointerId !== undefined && event.pointerId !== activePointerId) return;
+            mode = null;
+            activePointerId = null;
+            wrapper.style.zIndex = "99999";
+        }
+
+        wrapper.addEventListener("pointerup", stopDrag);
+        wrapper.addEventListener("pointercancel", stopDrag);
+
+        document.addEventListener("pointerup", function(event) {
+            if (mode === "drag" && event.pointerId === activePointerId) stopDrag(event);
+            if (mode === "resize" && event.pointerId === activePointerId) stopResize(event);
+        });
+
+        if (resizeHandle) {
+            resizeHandle.addEventListener("pointerdown", function(event) {
+                event.preventDefault();
+                event.stopPropagation();
+                mode = "resize";
+                activePointerId = event.pointerId;
+                startX = event.clientX;
+                startY = event.clientY;
+                startSize = wrapper.offsetWidth;
+                wrapper.style.zIndex = "99999";
+                try { resizeHandle.setPointerCapture(event.pointerId); } catch (e) {}
+            });
+
+            resizeHandle.addEventListener("pointermove", function(event) {
+                if (mode !== "resize" || event.pointerId !== activePointerId) return;
+                event.preventDefault();
+                const dx = event.clientX - startX;
+                const dy = event.clientY - startY;
+                let newSize = Math.max(35, Math.min(startSize + Math.max(dx, dy), 300));
+                wrapper.style.width = newSize + "px";
+                wrapper.style.height = newSize + "px";
+                wrapper.style.zIndex = "99999";
+            });
+
+            function stopResize(event) {
+                if (mode !== "resize") return;
+                if (event && event.pointerId !== undefined && event.pointerId !== activePointerId) return;
+                mode = null;
+                activePointerId = null;
+                wrapper.style.zIndex = "99999";
+            }
+
+            resizeHandle.addEventListener("pointerup", stopResize);
+            resizeHandle.addEventListener("pointercancel", stopResize);
+        }
+    }
+
+    function removeSeal(event) {
+        event.stopPropagation();
+        const wrapper = document.getElementById("sealWrapper");
+        const area = document.getElementById("sealArea");
+        const input = document.getElementById("sealInput");
+        if (wrapper) wrapper.style.display = "none";
+        if (area) area.classList.remove("has-seal");
+        if (input) input.value = "";
+        localStorage.removeItem("sellerSealImageA");
+        localStorage.removeItem("sellerSealPosA");
+    }
+
+    function removeSealB(event) {
+        event.stopPropagation();
+        const wrapper = document.getElementById("sealWrapperB");
+        const area = document.getElementById("sealAreaB");
+        const input = document.getElementById("sealInputB");
+        if (wrapper) wrapper.style.display = "none";
+        if (area) area.classList.remove("has-seal");
+        if (input) input.value = "";
+        localStorage.removeItem("sellerSealImageB");
+        localStorage.removeItem("sellerSealPosB");
+    }
+
+    window.onload = function() {
+        loadContract();
+        loadCertificateTemplate();
+
+        const sealInput = document.getElementById("sealInput");
+        if (sealInput) sealInput.addEventListener("change", uploadSeal);
+        const sealInputB = document.getElementById("sealInputB");
+        if (sealInputB) sealInputB.addEventListener("change", uploadSealB);
+
+        const savedImgA = localStorage.getItem("sellerSealImageA");
+        if (savedImgA) showSeal("sealArea", "sealWrapper", "sealImage", savedImgA);
+
+        const savedImgB = localStorage.getItem("sellerSealImageB");
+        if (savedImgB) showSeal("sealAreaB", "sealWrapperB", "sealImageB", savedImgB);
+    };
+</script>
+
+</body>
+</html>
