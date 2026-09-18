@@ -1324,7 +1324,7 @@
                                 </label>
                             </div>
 
-                            <label>鉴定编号</label><input type="text" id="certNoInput" value="60340202603290703" oninput="syncCertificateField('certNoInput','certNoOverlay')">
+                            <label>鉴定编号</label><input type="text" id="certNoInput" value="鑒定编號：60340202603290703" oninput="syncCertificateField('certNoInput','certNoOverlay')">
                             <label>样品名称</label><input type="text" id="certNameInput" value="第四套人民币第十元纸币" oninput="syncTableField(0,1,'certNameInput')">
                             <label>测试日期</label><input type="text" id="certTestDateInput" value="2026/03/29" oninput="syncTableField(0,3,'certTestDateInput')">
                             <label>样品尺寸</label><input type="text" id="certSizeInput" value="未测量" oninput="syncTableField(1,1,'certSizeInput')">
@@ -1353,10 +1353,15 @@
                             <div class="certificate-paper" id="certificatePaper">
                                 <img class="certificate-background" id="certificateImage" alt="证书模板背景" draggable="false">
                                 
-                                <!-- 独立的鉴定编号与最后日期文字输入框（已支持自由拖动和调整大小） -->
-                                <input class="cert-edit-control cert-no" id="certNoOverlay" value="60340202603290703" aria-label="鉴定编号">
-                                <input class="cert-edit-control cert-final-date" id="certFinalDateOverlay" value="二零二六年三月" aria-label="最后日期">
-                                
+                                <!-- 鉴定编号：支持自由移动和调整大小 -->
+<div class="cert-edit-control cert-no" id="certNoBox">
+    <input class="cert-cell-input" id="certNoOverlay" value="60340202603290703" aria-label="鉴定编号">
+</div>
+
+<!-- 最后日期：支持自由移动和调整大小 -->
+<div class="cert-edit-control cert-final-date" id="certFinalDateBox">
+    <input class="cert-cell-input" id="certFinalDateOverlay" value="二零二六年三月" aria-label="最后日期">
+</div>
                                 <!-- 6个区域合并为一个表格，支持自由调整大小和自由拖动 -->
                                 <div class="cert-merged-table-box" id="certMergedTableBox">
                                     <table class="cert-inner-table">
