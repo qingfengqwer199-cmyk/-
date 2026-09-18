@@ -755,15 +755,18 @@
         .certificate-paper{width:min(100%,760px);margin:0 auto;position:relative;background:#fff;box-shadow:0 5px 25px rgba(0,0,0,.15);overflow:hidden;aspect-ratio:1125/1595}
         .certificate-paper>.certificate-background{display:block;position:absolute;inset:0;width:100%;height:100%;object-fit:fill;user-select:none;-webkit-user-drag:none}
         
-        /* 独立文本框（鉴定编号与最后日期：现已支持自由拖动和调整大小） */
-        .cert-edit-control{position:absolute;box-sizing:border-box;z-index:4;margin:0;padding:4px 6px;border:1.5px solid #000000;border-radius:3px;background:rgba(255,255,255,0.25);color:#111;text-align:center;font-family:"Microsoft YaHei","PingFang SC",Arial,sans-serif;font-weight:600;outline:none;line-height:1.2;font-size:clamp(10px,1.55vw,17px);cursor:move;resize:both;overflow:auto;touch-action:none;}
-        .cert-edit-control:hover{background:rgba(255,255,255,0.5);border-color:#000;}
-        .cert-edit-control:focus{border:1.5px solid #d4af37;background:rgba(255,255,255,0.85);box-shadow:0 0 0 2px rgba(212,175,55,.18)}
+        /* 独立文本框 */
+        .cert-edit-control{position:absolute;box-sizing:border-box;z-index:4;margin:0;padding:4px 6px;border-radius:3px;background:rgba(255,255,255,0.25);color:#111;text-align:center;font-family:"Microsoft YaHei","PingFang SC",Arial,sans-serif;font-weight:600;outline:none;line-height:1.2;font-size:clamp(10px,1.55vw,17px);cursor:move;resize:both;overflow:auto;touch-action:none;}
         
-        .cert-no{left:40.2%;top:25.7%;width:37.2%;height:3.4%}
-        .cert-final-date{left:65%;top:82%;width:19%;height:3.5%}
+        .cert-no{border:1px solid transparent;left:40.2%;top:25.7%;width:37.2%;height:3.4%}
+        .cert-no:hover{background:rgba(255,255,255,0.4);border-color:rgba(0,0,0,0.15);}
+        .cert-no:focus{border:1px solid #d4af37;background:rgba(255,255,255,0.85);box-shadow:0 0 0 2px rgba(212,175,55,.18)}
 
-        /* 6个区域合并为一个表格框架：具备黑色边框、支持自由移动和调整大小 */
+        .cert-final-date{border:1px solid transparent;left:65%;top:82%;width:19%;height:3.5%}
+        .cert-final-date:hover{background:rgba(255,255,255,0.4);border-color:rgba(0,0,0,0.15);}
+        .cert-final-date:focus{border:1px solid #d4af37;background:rgba(255,255,255,0.85);box-shadow:0 0 0 2px rgba(212,175,55,.18)}
+
+        /* 6个区域合并为一个表格框架：内容文字格式始终居中（水平与垂直双向居中） */
         .cert-merged-table-box {
             position: absolute;
             left: 27.5%;
@@ -800,8 +803,8 @@
         .cert-inner-table td {
             border: 1px solid #000000;
             padding: 2px;
-            text-align: center;
-            vertical-align: middle;
+            text-align: center !important;         /* 强制始终水平居中 */
+            vertical-align: middle !important;     /* 强制始终垂直居中 */
             font-size: clamp(9px, 1.3vw, 14px);
             font-weight: 600;
             color: #111;
@@ -811,18 +814,19 @@
             height: 100%;
             border: none;
             background: transparent;
-            text-align: center;
+            text-align: center !important;         /* 强制输入框文字始终水平居中 */
             font-weight: 600;
             color: #111;
             outline: none;
             font-family: inherit;
             font-size: inherit;
+            display: block;
         }
         .cert-cell-input:focus {
             background: rgba(212, 175, 55, 0.15);
         }
 
-        /* 图片区域网格容器：支持自由移动和编辑大小 */
+        /* 图片区域网格容器 */
         .cert-images-grid-box {
             position: absolute;
             left: 27.5%;
@@ -889,7 +893,7 @@
             font-size: 10px;
         }
 
-        /* 下方突破选择上传功能区域 */
+        /* 下方突破选择上传功能区域（截图时隐藏） */
         .cert-breakthrough-upload-box {
             position: absolute;
             left: 27.5%;
@@ -1353,16 +1357,17 @@
                             <div class="certificate-paper" id="certificatePaper">
                                 <img class="certificate-background" id="certificateImage" alt="证书模板背景" draggable="false">
                                 
-                                <!-- 鉴定编号：支持自由移动和调整大小 -->
-<div class="cert-edit-control cert-no" id="certNoBox">
-    <input class="cert-cell-input" id="certNoOverlay" value="60340202603290703" aria-label="鉴定编号">
-</div>
+                                <!-- 鉴定编号 -->
+                                <div class="cert-edit-control cert-no" id="certNoBox">
+                                    <input class="cert-cell-input" id="certNoOverlay" value="60340202603290703" aria-label="鉴定编号">
+                                </div>
 
-<!-- 最后日期：支持自由移动和调整大小 -->
-<div class="cert-edit-control cert-final-date" id="certFinalDateBox">
-    <input class="cert-cell-input" id="certFinalDateOverlay" value="二零二六年三月" aria-label="最后日期">
-</div>
-                                <!-- 6个区域合并为一个表格，支持自由调整大小和自由拖动 -->
+                                <!-- 最后日期 -->
+                                <div class="cert-edit-control cert-final-date" id="certFinalDateBox">
+                                    <input class="cert-cell-input" id="certFinalDateOverlay" value="二零二六年三月" aria-label="最后日期">
+                                </div>
+
+                                <!-- 6个区域合并为一个表格（已强制始终水平和垂直居中对齐） -->
                                 <div class="cert-merged-table-box" id="certMergedTableBox">
                                     <table class="cert-inner-table">
                                         <tr>
@@ -1386,15 +1391,15 @@
                                     </table>
                                 </div>
                                 
-                                <!-- 图片区域网格容器：支持自由移动和编辑大小 -->
+                                <!-- 图片区域网格容器 -->
                                 <div class="cert-images-grid-box" id="certImagesGridBox">
                                     <div class="cert-images-grid" id="certImagesGrid">
                                         <!-- 动态渲染图片格子 -->
                                     </div>
                                 </div>
 
-                                <!-- 下方突破选择上传功能区域 -->
-                                <div class="cert-breakthrough-upload-box">
+                                <!-- 下方突破选择上传功能区域（截图时会自动忽略隐藏） -->
+                                <div class="cert-breakthrough-upload-box" id="certBreakthroughBox">
                                     <label class="cert-breakthrough-btn" title="突破限制直接选择文件上传到证书">
                                         ⚡ 突破选择上传
                                         <input type="file" accept="image/*" onchange="handleBreakthroughUpload(event)" style="display:none;">
@@ -1656,9 +1661,9 @@
                                         <div style="display: flex; justify-content: space-between; align-items: center;">
                                             <span style="width: 4em; text-align-last: justify; display: inline-block;">日期：</span>
                                             <div style="width: 225px; text-align: left; white-space: nowrap;">
-                                                <span contenteditable="true" style="width:42px; display:inline-block; text-align:center; border-bottom:1px solid #000; outline:none; min-height:20px;">2026</span>年
-                                                <span contenteditable="true" style="width:30px; display:inline-block; text-align:center; border-bottom:1px solid #000; outline:none; min-height:20px;">9</span>月
-                                                <span contenteditable="true" style="width:30px; display:inline-block; text-align:center; border-bottom:1px solid #000; outline:none; min-height:20px;">13</span>日
+                                                <span contenteditable="true" style="width:42px; display:inline-block; text-align:center; border-bottom:none; outline:none; min-height:20px;">2026</span>年
+                                                <span contenteditable="true" style="width:30px; display:inline-block; text-align:center; border-bottom:none; outline:none; min-height:20px;">9</span>月
+                                                <span contenteditable="true" style="width:30px; display:inline-block; text-align:center; border-bottom:none; outline:none; min-height:20px;">13</span>日
                                             </div>
                                         </div>
                                     </div>
@@ -1688,9 +1693,9 @@
                                         <div style="display: flex; justify-content: space-between; align-items: center;">
                                             <span style="width: 4em; text-align-last: justify; display: inline-block;">日期：</span>
                                             <div style="width: 225px; text-align: left; white-space: nowrap;">
-                                                <span contenteditable="true" style="width:42px; display:inline-block; text-align:center; border-bottom:1px solid #000; outline:none; min-height:20px;">2026</span>年
-                                                <span contenteditable="true" style="width:30px; display:inline-block; text-align:center; border-bottom:1px solid #000; outline:none; min-height:20px;">9</span>月
-                                                <span contenteditable="true" style="width:30px; display:inline-block; text-align:center; border-bottom:1px solid #000; outline:none; min-height:20px;">13</span>日
+                                                <span contenteditable="true" style="width:42px; display:inline-block; text-align:center; border-bottom:none; outline:none; min-height:20px;">2026</span>年
+                                                <span contenteditable="true" style="width:30px; display:inline-block; text-align:center; border-bottom:none; outline:none; min-height:20px;">9</span>月
+                                                <span contenteditable="true" style="width:30px; display:inline-block; text-align:center; border-bottom:none; outline:none; min-height:20px;">13</span>日
                                             </div>
                                         </div>
                                     </div>
@@ -1970,7 +1975,7 @@
         }
     }
 
-    // 支持自由拖拽元素（鉴定编号、最后日期等独立文本框、表格框、图片框）
+    // 支持自由拖拽元素
     function initCertControlDrag() {
         const controls = document.querySelectorAll(".cert-edit-control, .cert-merged-table-box, .cert-images-grid-box");
         const paper = document.getElementById("certificatePaper");
@@ -1982,7 +1987,6 @@
 
             el.addEventListener("pointerdown", function(e) {
                 const rect = el.getBoundingClientRect();
-                // 若点击右下角调整大小手柄（resize 区域），则不触发拖动
                 if (e.clientX > rect.right - 18 && e.clientY > rect.bottom - 18) return;
                 if (e.target.tagName === 'INPUT' || e.target.tagName === 'BUTTON' || e.target.tagName === 'LABEL') return;
                 
@@ -2115,21 +2119,56 @@
         location.reload();
     }
 
-    async function screenshotCertificate() {
-        const paper = document.getElementById("certificatePaper");
+    async function screenshotContract() {
+        const paper = document.getElementById("contractPaper");
         if (!paper) return;
         try {
+            paper.classList.add("contract-capture-mode");
             const canvas = await html2canvas(paper, {
                 scale: 2,
                 useCORS: true,
                 backgroundColor: "#ffffff",
                 logging: false
             });
+            paper.classList.remove("contract-capture-mode");
+            const link = document.createElement("a");
+            link.download = "卖家质保金合同.png";
+            link.href = canvas.toDataURL("image/png");
+            link.click();
+        } catch (error) {
+            paper.classList.remove("contract-capture-mode");
+            alert("截图失败，请重试。");
+        }
+    }
+
+    function printContract() {
+        window.print();
+    }
+
+    async function screenshotCertificate() {
+        const paper = document.getElementById("certificatePaper");
+        const breakthroughBox = document.getElementById("certBreakthroughBox");
+        if (!paper) return;
+        try {
+            // 截图前隐藏突破上传功能位置，确保截图中不显示
+            if (breakthroughBox) breakthroughBox.style.display = "none";
+
+            const canvas = await html2canvas(paper, {
+                scale: 2,
+                useCORS: true,
+                backgroundColor: "#ffffff",
+                logging: false
+            });
+
+            // 截图完成后恢复显示
+            if (breakthroughBox) breakthroughBox.style.display = "flex";
+
             const link = document.createElement("a");
             link.download = "鉴定证书.png";
             link.href = canvas.toDataURL("image/png");
             link.click();
         } catch (error) {
+            if (breakthroughBox) breakthroughBox.style.display = "flex";
             alert("截图失败，请重试。");
         }
     }
@@ -2147,6 +2186,14 @@
         saveSealData("A");
         saveSealData("B");
         alert("合同内容已保存！");
+    }
+
+    function clearContract() {
+        if (!confirm("确定要恢复默认合同内容吗？")) return;
+        localStorage.removeItem("sellerContractContentV3");
+        localStorage.removeItem("sellerSealImageA");
+        localStorage.removeItem("sellerSealImageB");
+        location.reload();
     }
 
     function loadContract() {
