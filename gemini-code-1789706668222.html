@@ -893,6 +893,11 @@
             font-size: 10px;
         }
 
+        /* 截图时隐藏黑色X按钮的控制类 */
+        .certificate-paper.cert-capture-mode .slot-clear {
+            display: none !important;
+        }
+
         /* 下方突破选择上传功能区域（截图时隐藏） */
         .cert-breakthrough-upload-box {
             position: absolute;
@@ -2150,7 +2155,8 @@
         const breakthroughBox = document.getElementById("certBreakthroughBox");
         if (!paper) return;
         try {
-            // 截图前隐藏突破上传功能位置，确保截图中不显示
+            // 截图前加上类名，自动隐藏黑色X按钮，并隐藏突破上传功能位置
+            paper.classList.add("cert-capture-mode");
             if (breakthroughBox) breakthroughBox.style.display = "none";
 
             const canvas = await html2canvas(paper, {
@@ -2160,7 +2166,8 @@
                 logging: false
             });
 
-            // 截图完成后恢复显示
+            // 截图完成后移除类名恢复黑色X显示，并恢复突破上传区域显示
+            paper.classList.remove("cert-capture-mode");
             if (breakthroughBox) breakthroughBox.style.display = "flex";
 
             const link = document.createElement("a");
@@ -2168,6 +2175,7 @@
             link.href = canvas.toDataURL("image/png");
             link.click();
         } catch (error) {
+            paper.classList.remove("cert-capture-mode");
             if (breakthroughBox) breakthroughBox.style.display = "flex";
             alert("截图失败，请重试。");
         }
