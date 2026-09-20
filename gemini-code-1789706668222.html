@@ -8,6 +8,7 @@
     <title>拍卖后台管理系统</title>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
 
     <style>
 
@@ -689,41 +690,284 @@
             z-index: 99999 !important;
         }
 
-        @media(max-width: 1100px) {
-            .contract-paper {
-                transform-origin: top center;
-                width: 210mm;
-            }
-            .contract-wrapper {
-                overflow-x: auto;
-                padding-bottom: 20px;
-            }
+        /* =====================================================
+           拍卖成交清单（从右侧文件整合）样式
+        ===================================================== */
+        :root {
+            --auct-primary-gold: #d4af37;
+            --auct-dark-gold: #b38b2d;
+            --auct-bg-dark: #121214;
+            --auct-panel-bg: rgba(25, 25, 30, 0.85);
+            --auct-border-gold: rgba(212, 175, 55, 0.3);
         }
 
-        @media print {
-            body * {
-                visibility: hidden !important;
-            }
-            #contractPaper,
-            #contractPaper * {
-                visibility: visible !important;
-            }
-            #contractPaper {
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 210mm;
-                min-height: 297mm;
-                margin: 0;
-                box-shadow: none;
-                border: none;
-            }
-            .seal-upload-btn,
-            .seal-tip,
-            .seal-resize-handle,
-            .seal-delete-btn {
-                display: none !important;
-            }
+        .auction-layout-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 30px;
+            width: 100%;
+            box-sizing: border-box;
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        .auction-control-panel {
+            width: 380px;
+            background: #19191c;
+            border: 1px solid var(--auct-border-gold);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            box-sizing: border-box;
+            max-height: 85vh;
+            overflow-y: auto;
+            color: #e0e0e0;
+        }
+
+        .auction-control-panel::-webkit-scrollbar {
+            width: 6px;
+        }
+        .auction-control-panel::-webkit-scrollbar-thumb {
+            background: var(--auct-border-gold);
+            border-radius: 3px;
+        }
+
+        .auction-panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--auct-border-gold);
+            padding-bottom: 12px;
+            margin-bottom: 20px;
+        }
+
+        .auction-panel-header h3 {
+            margin: 0;
+            font-size: 18px;
+            color: var(--auct-primary-gold);
+            letter-spacing: 1px;
+        }
+
+        .auction-badge {
+            font-size: 11px;
+            background: rgba(212, 175, 55, 0.15);
+            color: var(--auct-primary-gold);
+            padding: 3px 8px;
+            border-radius: 20px;
+            border: 1px solid var(--auct-border-gold);
+        }
+
+        .auction-input-group {
+            margin-bottom: 14px;
+        }
+
+        .auction-input-group label {
+            display: block;
+            font-size: 12px;
+            color: #aaa;
+            margin-bottom: 5px;
+            letter-spacing: 0.5px;
+        }
+
+        .auction-input-group input, .auction-input-group select {
+            width: 100%;
+            background: rgba(15, 15, 18, 0.9);
+            border: 1px solid #333;
+            border-radius: 6px;
+            padding: 10px 12px;
+            color: #fff;
+            font-size: 13px;
+            font-family: inherit;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        .auction-input-group input[type="file"] {
+            padding: 6px;
+            cursor: pointer;
+        }
+
+        .auction-input-group input:focus, .auction-input-group select:focus {
+            outline: none;
+            border-color: var(--auct-primary-gold);
+            box-shadow: 0 0 8px rgba(212, 175, 55, 0.2);
+        }
+
+        .auction-btn-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .auction-btn-action {
+            flex: 1;
+            padding: 8px;
+            font-size: 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .auction-btn-delete-bg {
+            background: rgba(204, 41, 41, 0.2);
+            border: 1px solid #cc2929;
+            color: #ff6b6b;
+        }
+        .auction-btn-delete-bg:hover {
+            background: rgba(204, 41, 41, 0.4);
+        }
+
+        .auction-btn-save {
+            width: 100%;
+            background: linear-gradient(135deg, #d4af37 0%, #aa7c11 100%);
+            color: #1a1a1a;
+            border: none;
+            padding: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            border-radius: 6px;
+            margin-top: 15px;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .auction-btn-save:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.5);
+        }
+
+        .auction-certificate-wrapper {
+            filter: drop-shadow(0 15px 30px rgba(0,0,0,0.3));
+        }
+
+        .auction-certificate-container {
+            width: 595px;
+            height: 842px;
+            background: linear-gradient(135deg, #fdfbf7 0%, #f1eadc 100%);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            border: 10px solid #d4af37;
+            padding: 40px;
+            box-sizing: border-box;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .auction-inner-border {
+            border: 2px solid #b38b2d;
+            padding: 30px;
+            height: 100%;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            background: rgba(255, 255, 255, 0.15);
+            transition: border 0.3s ease;
+        }
+
+        .auction-certificate-container.custom-bg .auction-inner-border {
+            border: none !important;
+        }
+
+        .auction-header-section {
+            text-align: center;
+            margin-top: 10px;
+        }
+        .auction-top-subtitle {
+            font-size: 12px;
+            font-family: Arial, sans-serif;
+            color: #b38b2d;
+            letter-spacing: 3px;
+            font-weight: bold;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+        }
+        .auction-title-text {
+            font-size: 26px;
+            font-weight: 700;
+            color: #2c2c2c;
+            letter-spacing: 2px;
+        }
+        .auction-title-line {
+            width: 50%;
+            height: 2px;
+            background-color: #b38b2d;
+            margin: 12px auto 0 auto;
+        }
+
+        .auction-cert-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        .auction-cert-table td {
+            border: 1px solid #b38b2d;
+            padding: 10px 14px;
+            font-size: 14px;
+            color: #2c2c2c;
+            background: rgba(255, 255, 255, 0.4);
+        }
+        .auction-cert-table tr td:first-child {
+            font-weight: 600;
+        }
+
+        .auction-footer-section {
+            display: flex;
+            justify-content: flex-end;
+            align-items: flex-end;
+            margin-bottom: 10px;
+            position: relative;
+            min-height: 80px;
+        }
+        .auction-company-text {
+            font-size: 15px;
+            font-weight: 700;
+            color: #2c2c2c;
+            text-align: right;
+        }
+
+        #auction-draggable-seal {
+            position: absolute;
+            right: 40px;
+            bottom: 40px;
+            width: 120px;
+            cursor: move;
+            display: none;
+            z-index: 10;
+        }
+
+        #auction-draggable-seal img {
+            width: 100%;
+            display: block;
+            pointer-events: none;
+        }
+
+        #auction-draggable-seal.active-seal {
+            outline: 2px dashed #d4af37;
+        }
+
+        .auction-resize-handle {
+            position: absolute;
+            right: -6px;
+            bottom: -6px;
+            width: 12px;
+            height: 12px;
+            background: #d4af37;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            cursor: nwse-resize;
+            display: none;
+        }
+        #auction-draggable-seal.active-seal .auction-resize-handle {
+            display: block;
         }
 
 
@@ -755,7 +999,6 @@
         .certificate-paper{width:min(100%,760px);margin:0 auto;position:relative;background:#fff;box-shadow:0 5px 25px rgba(0,0,0,.15);overflow:hidden;aspect-ratio:1125/1595}
         .certificate-paper>.certificate-background{display:block;position:absolute;inset:0;width:100%;height:100%;object-fit:fill;user-select:none;-webkit-user-drag:none}
         
-        /* 独立文本框 */
         .cert-edit-control{position:absolute;box-sizing:border-box;z-index:4;margin:0;padding:4px 6px;border-radius:3px;background:rgba(255,255,255,0.25);color:#111;text-align:center;font-family:"Microsoft YaHei","PingFang SC",Arial,sans-serif;font-weight:600;outline:none;line-height:1.2;font-size:clamp(10px,1.55vw,17px);cursor:move;resize:both;overflow:auto;touch-action:none;}
         
         .cert-no{border:1px solid transparent;left:40.2%;top:25.7%;width:37.2%;height:3.4%}
@@ -766,7 +1009,6 @@
         .cert-final-date:hover{background:rgba(255,255,255,0.4);border-color:rgba(0,0,0,0.15);}
         .cert-final-date:focus{border:1px solid #d4af37;background:rgba(255,255,255,0.85);box-shadow:0 0 0 2px rgba(212,175,55,.18)}
 
-        /* 6个区域合并为一个表格框架：内容文字格式始终居中（水平与垂直双向居中） */
         .cert-merged-table-box {
             position: absolute;
             left: 27.5%;
@@ -803,8 +1045,8 @@
         .cert-inner-table td {
             border: 1px solid #000000;
             padding: 2px;
-            text-align: center !important;         /* 强制始终水平居中 */
-            vertical-align: middle !important;     /* 强制始终垂直居中 */
+            text-align: center !important;
+            vertical-align: middle !important;
             font-size: clamp(9px, 1.3vw, 14px);
             font-weight: 600;
             color: #111;
@@ -814,7 +1056,7 @@
             height: 100%;
             border: none;
             background: transparent;
-            text-align: center !important;         /* 强制输入框文字始终水平居中 */
+            text-align: center !important;
             font-weight: 600;
             color: #111;
             outline: none;
@@ -826,7 +1068,6 @@
             background: rgba(212, 175, 55, 0.15);
         }
 
-        /* 图片区域网格容器 */
         .cert-images-grid-box {
             position: absolute;
             left: 27.5%;
@@ -893,12 +1134,6 @@
             font-size: 10px;
         }
 
-        /* 截图时隐藏黑色X按钮的控制类 */
-        .certificate-paper.cert-capture-mode .slot-clear {
-            display: none !important;
-        }
-
-        /* 下方突破选择上传功能区域（截图时隐藏） */
         .cert-breakthrough-upload-box {
             position: absolute;
             left: 27.5%;
@@ -939,9 +1174,14 @@
             text-overflow: ellipsis;
         }
 
+        /* 截图时专门用于隐藏清除按钮的类 */
+        .certificate-capture-mode .slot-clear {
+            display: none !important;
+        }
+
         .certificate-note{margin-top:12px;text-align:center;color:#888;font-size:13px;line-height:1.6}
         @media(max-width:900px){.certificate-editor-layout{grid-template-columns:1fr}.certificate-form{position:static}}
-        @media print{body *{visibility:hidden!important}#certificate,#certificate *{visibility:visible!important}#certificate .certificate-form,#certificate .certificate-tools,#certificate .certificate-editor-tip,#certificate .certificate-note,#certificate .cert-breakthrough-upload-box{display:none!important}#certificate{position:absolute;left:0;top:0;width:100%}.certificate-editor-layout{display:block!important}.certificate-viewer{padding:0;border:0;background:#fff}.certificate-paper{width:210mm;max-width:none;box-shadow:none;margin:0 auto}.cert-edit-control,.cert-merged-table-box,.cert-images-grid-box{border:0!important;background:transparent!important}}
+        @media print{body *{visibility:hidden!important}#certificate,#certificate *{visibility:visible!important}#certificate .certificate-form,#certificate .certificate-tools,#certificate .certificate-editor-tip,#certificate .certificate-note,#certificate .cert-breakthrough-upload-box,#certificate .slot-clear{display:none!important}#certificate{position:absolute;left:0;top:0;width:100%}.certificate-editor-layout{display:block!important}.certificate-viewer{padding:0;border:0;background:#fff}.certificate-paper{width:210mm;max-width:none;box-shadow:none;margin:0 auto}.cert-edit-control,.cert-merged-table-box,.cert-images-grid-box{border:0!important;background:transparent!important}}
     </style>
 
 </head>
@@ -1004,6 +1244,10 @@
                 <span class="menu-icon">□</span>
                 <span class="menu-text">卖家质保金合同</span>
             </li>
+            <li class="menu-item" onclick="showPage('auctionList', this)">
+                <span class="menu-icon">📋</span>
+                <span class="menu-text">拍卖成交清单</span>
+            </li>
         </ul>
     </aside>
 
@@ -1013,7 +1257,7 @@
         <!-- 顶部栏 -->
         <header class="topbar">
             <div class="top-title">
-                邦澣斯（香港）有限公司 拍卖管理系统
+                邦翰斯（香港）有限公司 拍卖管理系统
             </div>
 
             <div class="top-right">
@@ -1347,9 +1591,7 @@
                                     <span>表格图片管理（多个图片）</span>
                                     <button class="add-image-btn" type="button" onclick="addCertificateImageSlot()">+ 添加图片</button>
                                 </div>
-                                <div class="certificate-upload-row" id="certImageUploadList">
-                                    <!-- 动态生成的上传项列表 -->
-                                </div>
+                                <div class="certificate-upload-row" id="certImageUploadList"></div>
                             </div>
 
                             <div class="form-actions">
@@ -1362,17 +1604,14 @@
                             <div class="certificate-paper" id="certificatePaper">
                                 <img class="certificate-background" id="certificateImage" alt="证书模板背景" draggable="false">
                                 
-                                <!-- 鉴定编号 -->
                                 <div class="cert-edit-control cert-no" id="certNoBox">
                                     <input class="cert-cell-input" id="certNoOverlay" value="60340202603290703" aria-label="鉴定编号">
                                 </div>
 
-                                <!-- 最后日期 -->
                                 <div class="cert-edit-control cert-final-date" id="certFinalDateBox">
                                     <input class="cert-cell-input" id="certFinalDateOverlay" value="二零二六年三月" aria-label="最后日期">
                                 </div>
 
-                                <!-- 6个区域合并为一个表格（已强制始终水平和垂直居中对齐） -->
                                 <div class="cert-merged-table-box" id="certMergedTableBox">
                                     <table class="cert-inner-table">
                                         <tr>
@@ -1396,14 +1635,10 @@
                                     </table>
                                 </div>
                                 
-                                <!-- 图片区域网格容器 -->
                                 <div class="cert-images-grid-box" id="certImagesGridBox">
-                                    <div class="cert-images-grid" id="certImagesGrid">
-                                        <!-- 动态渲染图片格子 -->
-                                    </div>
+                                    <div class="cert-images-grid" id="certImagesGrid"></div>
                                 </div>
 
-                                <!-- 下方突破选择上传功能区域（截图时会自动忽略隐藏） -->
                                 <div class="cert-breakthrough-upload-box" id="certBreakthroughBox">
                                     <label class="cert-breakthrough-btn" title="突破限制直接选择文件上传到证书">
                                         ⚡ 突破选择上传
@@ -1639,10 +1874,8 @@
                                 </div>
                             </div>
 
-                            <!-- ==================== 签章区域 ==================== -->
+                            <!-- 签章区域 -->
                             <div class="contract-sign">
-
-                                <!-- 甲方 -->
                                 <div class="sign-box">
                                     <div class="sign-title">甲方签字/盖章</div>
                                     <div class="seal-upload-area" id="sealArea" style="border-bottom: none;">
@@ -1674,7 +1907,6 @@
                                     </div>
                                 </div>
 
-                                <!-- 乙方 -->
                                 <div class="sign-box">
                                     <div class="sign-title">乙方签字/盖章</div>
                                     <div class="seal-upload-area" id="sealAreaB" style="border-bottom: none;">
@@ -1705,9 +1937,127 @@
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
 
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- =====================================================
+                 拍卖成交清单（新增栏目内容）
+            ===================================================== -->
+            <div id="auctionList" class="page" style="display:none;">
+                <div class="welcome-box">
+                    <div class="page-title">拍卖成交清单</div>
+                    <div class="page-description">高端藏品证书及成交清单 A4 定制生成系统</div>
+                </div>
+
+                <div class="card">
+                    <div class="auction-layout-container">
+                        <!-- 左侧操作控制面板 -->
+                        <div class="auction-control-panel">
+                            <div class="auction-panel-header">
+                                <h3>A4 清单配置面板</h3>
+                                <div class="auction-badge">A4 PRO</div>
+                            </div>
+
+                            <div class="auction-input-group">
+                                <label>📜 自定义背景图片</label>
+                                <input type="file" id="auction-bg-file-input" accept="image/*" onchange="loadAuctionBackgroundImage(event)">
+                                <div class="auction-btn-row" style="margin-top: 8px;">
+                                    <button class="auction-btn-action auction-btn-delete-bg" onclick="removeAuctionBackgroundImage()">删除背景图</button>
+                                </div>
+                            </div>
+
+                            <div class="auction-input-group">
+                                <label>💮 上传印章图片（支持透明PNG）</label>
+                                <input type="file" id="auction-seal-file-input" accept="image/*" onchange="loadAuctionSealImage(event)">
+                                <div class="auction-btn-row" style="margin-top: 8px;">
+                                    <button class="auction-btn-action auction-btn-delete-bg" onclick="removeAuctionSealImage()">删除印章</button>
+                                </div>
+                            </div>
+
+                            <div class="auction-input-group">
+                                <label>顶部英文副标题（Logo英文）</label>
+                                <input type="text" id="auction-input-subtitle" value="BONHAMS (HONG KONG) LIMITED" oninput="updateAuctionContent()">
+                            </div>
+                            <div class="auction-input-group">
+                                <label>清单大标题</label>
+                                <input type="text" id="auction-input-title" value="邦澣斯拍賣成交清單" oninput="updateAuctionContent()">
+                            </div>
+                            <div class="auction-input-group">
+                                <label>表格第 1 行内容</label>
+                                <input type="text" id="auction-input-row1" value="藏品名称" oninput="updateAuctionContent()">
+                            </div>
+                            <div class="auction-input-group">
+                                <label>表格第 2 行内容</label>
+                                <input type="text" id="auction-input-row2" value="持 人：羅永傑" oninput="updateAuctionContent()">
+                            </div>
+                            <div class="auction-input-group">
+                                <label>表格第 3 行内容</label>
+                                <input type="text" id="auction-input-row3" value="起拍價：300000元" oninput="updateAuctionContent()">
+                            </div>
+                            <div class="auction-input-group">
+                                <label>表格第 4 行内容</label>
+                                <input type="text" id="auction-input-row4" value="成交價：2100000元" oninput="updateAuctionContent()">
+                            </div>
+                            <div class="auction-input-group">
+                                <label>表格第 5 行内容</label>
+                                <input type="text" id="auction-input-row5" value="買「家：美國華僑收藏家郝文強" oninput="updateAuctionContent()">
+                            </div>
+                            <div class="auction-input-group">
+                                <label>表格第 6 行内容</label>
+                                <input type="text" id="auction-input-row6" value="買家已付定金：1050000元" oninput="updateAuctionContent()">
+                            </div>
+                            <div class="auction-input-group">
+                                <label>表格第 7 行内容</label>
+                                <input type="text" id="auction-input-row7" value="交易質保金：21000" oninput="updateAuctionContent()">
+                            </div>
+                            <div class="auction-input-group">
+                                <label>表格第 8 行内容（日期栏）</label>
+                                <input type="text" id="auction-input-row8" value="成交日期：2026年09月20日" oninput="updateAuctionContent()">
+                            </div>
+                            <div class="auction-input-group">
+                                <label>底部公司名称（右下角对齐）</label>
+                                <input type="text" id="auction-input-company" value="公司名稱：邦澣斯（香港）有限公司" oninput="updateAuctionContent()">
+                            </div>
+
+                            <button class="auction-btn-save" onclick="takeAuctionScreenshot()">一键生成并下载 A4 截图</button>
+                        </div>
+
+                        <!-- 右侧 A4 比例预览呈现区 -->
+                        <div class="auction-certificate-wrapper">
+                            <div class="auction-certificate-container" id="auction-certificate">
+                                <div class="auction-inner-border" id="auction-cert-inner">
+                                    <div class="auction-header-section">
+                                        <div class="auction-top-subtitle" id="auction-view-subtitle">BONHAMS (HONG KONG) LIMITED</div>
+                                        <div class="auction-title-text" id="auction-view-title">邦澣斯拍賣成交清單</div>
+                                        <div class="auction-title-line"></div>
+                                    </div>
+
+                                    <table class="auction-cert-table">
+                                        <tr><td id="auction-view-row1">藏品名称：大清銅幣</td></tr>
+                                        <tr><td id="auction-view-row2">持   人：羅永傑</td></tr>
+                                        <tr><td id="auction-view-row3">起拍價：300000元</td></tr>
+                                        <tr><td id="auction-view-row4">成交價：2100000元</td></tr>
+                                        <tr><td id="auction-view-row5">買   家：美國華僑收藏家郝文強</td></tr>
+                                        <tr><td id="auction-view-row6">買家已付定金：1050000元</td></tr>
+                                        <tr><td id="auction-view-row7">交易質保金：21000元</td></tr>
+                                        <tr><td id="auction-view-row8">成交日期：2026年09月20日</td></tr>
+                                    </table>
+
+                                    <div class="auction-footer-section">
+                                        <div class="auction-company-text" id="auction-view-company">邦澣斯（香港）有限公司</div>
+                                    </div>
+
+                                    <!-- 可拖动和缩放的印章 -->
+                                    <div id="auction-draggable-seal">
+                                        <img id="auction-seal-img" src="" alt="印章">
+                                        <div class="auction-resize-handle" id="auction-resize-handle"></div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1856,6 +2206,146 @@
     }
 
     // ==========================================
+    // 拍卖成交清单（右侧文件功能整合）交互逻辑
+    // ==========================================
+    function updateAuctionContent() {
+        for (let i = 1; i <= 8; i++) {
+            const el = document.getElementById(`auction-view-row${i}`);
+            const inputEl = document.getElementById(`auction-input-row${i}`);
+            if (el && inputEl) {
+                el.innerText = inputEl.value;
+            }
+        }
+        const subtitleEl = document.getElementById('auction-input-subtitle');
+        const viewSubtitleEl = document.getElementById('auction-view-subtitle');
+        if (subtitleEl && viewSubtitleEl) viewSubtitleEl.innerText = subtitleEl.value;
+
+        const titleEl = document.getElementById('auction-input-title');
+        const viewTitleEl = document.getElementById('auction-view-title');
+        if (titleEl && viewTitleEl) viewTitleEl.innerText = titleEl.value;
+
+        const companyEl = document.getElementById('auction-input-company');
+        const viewCompanyEl = document.getElementById('auction-view-company');
+        if (companyEl && viewCompanyEl) viewCompanyEl.innerText = companyEl.value;
+    }
+
+    function loadAuctionBackgroundImage(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const certContainer = document.getElementById('auction-certificate');
+                certContainer.style.backgroundImage = `url('${e.target.result}')`;
+                certContainer.classList.add('custom-bg');
+            }
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function removeAuctionBackgroundImage() {
+        const certContainer = document.getElementById('auction-certificate');
+        certContainer.style.backgroundImage = 'none';
+        certContainer.classList.remove('custom-bg');
+        document.getElementById('auction-bg-file-input').value = '';
+    }
+
+    function loadAuctionSealImage(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const sealDiv = document.getElementById('auction-draggable-seal');
+                const sealImg = document.getElementById('auction-seal-img');
+                sealImg.src = e.target.result;
+                sealDiv.style.display = 'block';
+                sealDiv.classList.add('active-seal');
+            }
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function removeAuctionSealImage() {
+        const sealDiv = document.getElementById('auction-draggable-seal');
+        sealDiv.style.display = 'none';
+        sealDiv.classList.remove('active-seal');
+        document.getElementById('auction-seal-file-input').value = '';
+    }
+
+    const auctionSeal = document.getElementById('auction-draggable-seal');
+    const auctionResizeHandle = document.getElementById('auction-resize-handle');
+    const auctionInnerBorder = document.getElementById('auction-cert-inner');
+
+    let isAuctionDragging = false;
+    let isAuctionResizing = false;
+    let auctionStartX, auctionStartY, auctionStartLeft, auctionStartTop, auctionStartWidth;
+
+    auctionSeal.addEventListener('mousedown', function(e) {
+        if (e.target === auctionResizeHandle) return;
+        isAuctionDragging = true;
+        auctionStartX = e.clientX;
+        auctionStartY = e.clientY;
+        auctionStartLeft = auctionSeal.offsetLeft;
+        auctionStartTop = auctionSeal.offsetTop;
+        auctionSeal.classList.add('active-seal');
+        e.stopPropagation();
+    });
+
+    auctionResizeHandle.addEventListener('mousedown', function(e) {
+        isAuctionResizing = true;
+        auctionStartX = e.clientX;
+        auctionStartWidth = auctionSeal.offsetWidth;
+        e.stopPropagation();
+    });
+
+    document.addEventListener('mousemove', function(e) {
+        if (isAuctionDragging) {
+            let dx = e.clientX - auctionStartX;
+            let dy = e.clientY - auctionStartY;
+            let newLeft = auctionStartLeft + dx;
+            let newTop = auctionStartTop + dy;
+            
+            const maxLeft = auctionInnerBorder.clientWidth - auctionSeal.clientWidth;
+            const maxTop = auctionInnerBorder.clientHeight - auctionSeal.clientHeight;
+            
+            newLeft = Math.max(0, Math.min(newLeft, maxLeft));
+            newTop = Math.max(0, Math.min(newTop, maxTop));
+
+            auctionSeal.style.left = newLeft + 'px';
+            auctionSeal.style.top = newTop + 'px';
+            auctionSeal.style.right = 'auto';
+            auctionSeal.style.bottom = 'auto';
+        } else if (isAuctionResizing) {
+            let dw = e.clientX - auctionStartX;
+            let newWidth = auctionStartWidth + dw;
+            newWidth = Math.max(50, Math.min(newWidth, 300));
+            auctionSeal.style.width = newWidth + 'px';
+        }
+    });
+
+    document.addEventListener('mouseup', function() {
+        isAuctionDragging = false;
+        isAuctionResizing = false;
+    });
+
+    document.getElementById('auction-certificate').addEventListener('click', function() {
+        auctionSeal.classList.remove('active-seal');
+    });
+
+    function takeAuctionScreenshot() {
+        auctionSeal.classList.remove('active-seal');
+        const element = document.getElementById('auction-certificate');
+        html2canvas(element, {
+            scale: 2, 
+            useCORS: true
+        }).then(canvas => {
+            const link = document.createElement('a');
+            link.download = 'A4高端藏品证书.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        });
+    }
+
+    // ==========================================
     // 鉴定证书动态逻辑
     // ==========================================
     let certImagesData = [];
@@ -1980,7 +2470,6 @@
         }
     }
 
-    // 支持自由拖拽元素
     function initCertControlDrag() {
         const controls = document.querySelectorAll(".cert-edit-control, .cert-merged-table-box, .cert-images-grid-box");
         const paper = document.getElementById("certificatePaper");
@@ -2155,8 +2644,8 @@
         const breakthroughBox = document.getElementById("certBreakthroughBox");
         if (!paper) return;
         try {
-            // 截图前加上类名，自动隐藏黑色X按钮，并隐藏突破上传功能位置
-            paper.classList.add("cert-capture-mode");
+            // 截图前添加 capture 模式类，自动隐藏黑色X清除按钮和突破上传区域
+            paper.classList.add("certificate-capture-mode");
             if (breakthroughBox) breakthroughBox.style.display = "none";
 
             const canvas = await html2canvas(paper, {
@@ -2166,8 +2655,8 @@
                 logging: false
             });
 
-            // 截图完成后移除类名恢复黑色X显示，并恢复突破上传区域显示
-            paper.classList.remove("cert-capture-mode");
+            // 截图完成后移除类和恢复显示
+            paper.classList.remove("certificate-capture-mode");
             if (breakthroughBox) breakthroughBox.style.display = "flex";
 
             const link = document.createElement("a");
@@ -2175,7 +2664,7 @@
             link.href = canvas.toDataURL("image/png");
             link.click();
         } catch (error) {
-            paper.classList.remove("cert-capture-mode");
+            paper.classList.remove("certificate-capture-mode");
             if (breakthroughBox) breakthroughBox.style.display = "flex";
             alert("截图失败，请重试。");
         }
